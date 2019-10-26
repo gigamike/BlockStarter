@@ -1,0 +1,117 @@
+<!-- Page Heading/Breadcrumbs -->
+<h1 class="mt-4 mb-3">Create
+  <small>Project</small>
+</h1>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="<?php echo $this->url('home'); ?>">Home</a>
+  </li>
+  <li class="breadcrumb-item active">Create Project</li>
+</ol>
+
+<!-- Content Row -->
+<div class="row">
+  <!-- Map Column -->
+  <div class="col-lg-8 mb-4">
+    <?php
+      $form->setAttribute('action', $this->url('project', array('action' => 'create',)));
+      $form->setAttribute('class', 'js-validate');
+      $form->setAttribute('id', 'myForm');
+      $form->prepare();
+      echo $this->form()->openTag($form);
+      ?>
+
+      <?php
+        $flash = $this->flashMessenger();
+        $flash->setMessageOpenFormat('<div%s role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            ')
+            ->setMessageSeparatorString('')
+            ->setMessageCloseString('</div>');
+
+        echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+        echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+        echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+        echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+         ?>
+
+      <!-- Form Group -->
+      <div class="js-form-message form-group">
+        <?= $this->formLabel($form->get('name')) ?>
+        <?= $this->formElement($form->get('name')) ?>
+        <?= $this->formElementErrors()->render($form->get('name'), ['class' => 'help-block']) ?>
+      </div>
+      <!-- End Form Group -->
+
+      <!-- Form Group -->
+      <div class="js-form-message form-group">
+        <?= $this->formLabel($form->get('description')) ?>
+          <div class="input-group">
+          <?= $this->formElement($form->get('description')) ?>
+          </div>
+          <?= $this->formElementErrors()->render($form->get('description'), ['class' => 'help-block']) ?>
+      </div>
+      <!-- End Form Group -->
+
+      <!-- Form Group -->
+      <div class="js-form-message form-group">
+        <?= $this->formLabel($form->get('minimum_contribution')) ?>
+        <?= $this->formElement($form->get('minimum_contribution')) ?>
+        <?= $this->formElementErrors()->render($form->get('minimum_contribution'), ['class' => 'help-block']) ?>
+      </div>
+      <!-- End Form Group -->
+
+    <div class="js-form-message form-group">
+        <?= $this->formLabel($form->get('photo')) ?>
+        <?= $this->formFile($form->get('photo')) ?>
+        <?= $this->formElementErrors()->render($form->get('photo'), ['class' => 'help-block']) ?>
+        <ul class="help-block">
+          <li>File Types: jpg, jpeg, png</li>
+          <li>Dimension at least: 700x400</li>
+        </ul>
+      </div>
+
+      <!-- Checkbox -->
+      <div class="js-form-message mb-5">
+        <div class="custom-control custom-checkbox d-flex align-items-center text-muted">
+          <input type="checkbox" class="custom-control-input" id="termsCheckbox" name="termsCheckbox" required
+                 data-msg="Please accept our Terms and Conditions."
+                 data-error-class="u-has-error"
+                 data-success-class="u-has-success">
+          <label class="custom-control-label" for="termsCheckbox">
+            <small>
+              I agree to the
+              <a class="link-muted" href="#">Terms and Conditions</a>
+            </small>
+          </label>
+        </div>
+      </div>
+      <!-- End Checkbox -->
+
+      <!-- Button -->
+      <div class="row align-items-center mb-5">
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary transition-3d-hover">Get Started</button>
+        </div>
+      </div>
+      <!-- End Button -->
+    <?php echo $this->form()->closeTag();?>
+
+    </form>
+  </div>
+  <!-- Contact Details Column -->
+  <div class="col-lg-4 mb-4">
+    <h3>Tips for your project</h3>
+    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+    <ul>
+      <li>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</li>
+      <li>when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centurie</li>
+      <li>but also the leap into electronic typesetting, remaining essentially unchanged</li>
+      <li> It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages</li>
+    </ul>
+  </div>
+</div>
+<!-- /.row -->

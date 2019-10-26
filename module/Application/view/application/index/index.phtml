@@ -1,0 +1,145 @@
+<h1 class="my-4">Welcome to BlockStarter</h1>
+
+<!-- Features Section -->
+<div class="row">
+  <div class="col-lg-6 mb-5">
+    <p><strong>Online funding platform that connects startups, suppliers and investors together.</strong> Features and services are as follows</p>
+    <ul>
+      <li>Project Transparency</li>
+      <li>Resource Management</li>
+      <li>Escrow Service</li>
+      <li>Earn Incetives</li>
+    </ul>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt. Reiciendis quia dolorum ducimus unde.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis, omnis doloremque non cum id reprehenderit, quisquam totam aspernatur tempora minima unde aliquid ea culpa sunt. Reiciendis quia dolorum ducimus unde.</p>
+  </div>
+  <div class="col-lg-6">
+    <img class="img-fluid rounded" src="/img/splash.jpg" alt="">
+  </div>
+</div>
+<!-- /.row -->
+
+<!-- Call to Action Section -->
+<div class="row mb-4">
+  <div class="col-md-8">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.</p>
+  </div>
+  <div class="col-md-4">
+    <a class="btn btn-lg btn-secondary btn-block" href="<?php echo $this->url('project', ['action' => 'create',]); ?>">Start A Project</a>
+  </div>
+</div>
+
+<!-- Marketing Icons Section -->
+<div class="row">
+  <div class="col-lg-4 mb-4">
+    <div class="card h-100">
+      <h4 class="card-header">Project Transparency</h4>
+      <div class="card-body">
+        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+      </div>
+      <div class="card-footer">
+        <a href="#" class="btn btn-primary">Learn More</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-4">
+    <div class="card h-100">
+      <h4 class="card-header">Resource Management</h4>
+      <div class="card-body">
+        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis ipsam eos, nam perspiciatis natus commodi similique totam consectetur praesentium molestiae atque exercitationem ut consequuntur, sed eveniet, magni nostrum sint fuga.</p>
+      </div>
+      <div class="card-footer">
+        <a href="#" class="btn btn-primary">Learn More</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-4">
+    <div class="card h-100">
+      <h4 class="card-header">Earn Incetives</h4>
+      <div class="card-body">
+        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente esse necessitatibus neque.</p>
+      </div>
+      <div class="card-footer">
+        <a href="#" class="btn btn-primary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.row -->
+
+<!-- Portfolio Section -->
+<h2>Projects</h2>
+
+<?php
+            echo $this->paginationControl(
+                $this->paginator,
+                'sliding',
+                "partial/home/paginator.phtml",
+                array(
+                  'route' => 'projects',
+                  'search_by' => $this->search_by,
+                )
+            );
+          ?>
+
+<div class="row">
+  <?php foreach ($paginator as $row): ?>
+  <div class="col-lg-4 col-sm-6 portfolio-item">
+    <div class="card h-100">
+      <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getId(),)); ?>"><img class="card-img-top" src="/img/project/<?php echo $row->getId(); ?>/photo-700x400.jpg" alt=""></a>
+      <div class="card-body">
+        <h4 class="card-title">
+          <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getId(),)); ?>"><?php echo $this->escapehtml($row->getName()); ?></a>
+        </h4>
+        <p class="card-text"><?php echo $this->escapehtml($row->getDescription()); ?></p>
+        <div class="row mb-1">
+            <div class="col-6">
+              <h4 class="small text-muted">
+                Goal: <strong class="text-secondary">ETH <?php echo $this->escapehtml($row->getMinimumContribution()); ?></strong>
+              </h4>
+              <div class="js-hr-progress progress" style="height: 6px;">
+                <div class="js-hr-progress-bar progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+            <div class="col-6">
+              <h4 class="small text-muted">
+                Contributors: <strong class="text-secondary">0</strong>
+              </h4>
+              <div class="js-hr-progress progress" style="height: 6px;">
+                <div class="js-hr-progress-bar progress-bar bg-warning" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="card-footer">
+        <a href="#" class="btn btn-primary">Invest</a>
+      </div>
+    </div>
+  </div>
+  <?php endforeach; ?>
+</div>
+
+
+<?php
+echo $this->paginationControl(
+    $this->paginator,
+    'sliding',
+    "partial/home/paginator.phtml",
+    array(
+      'route' => 'projects',
+      'search_by' => $this->search_by,
+    )
+);
+?>
+
+<hr>
+
+<!-- Call to Action Section -->
+<div class="row mb-4">
+  <div class="col-md-8">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.</p>
+  </div>
+  <div class="col-md-4">
+    <a class="btn btn-lg btn-secondary btn-block" href="<?php echo $this->url('project', ['action' => 'create',]); ?>">Start A Project</a>
+  </div>
+</div>

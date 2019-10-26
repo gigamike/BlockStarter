@@ -1,0 +1,124 @@
+
+<script>
+$( document ).ready(function() {
+    console.log( "ready!" );
+});
+</script><!-- Login Form -->
+    <div class="container space-2">
+      <h1>Spending <span class="font-weight-semi-bold">Request</span></h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-primary breadcrumb-white">
+          <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="<?php echo $this->url('home'); ?>">Home</a>
+          </li>
+          <li class="breadcrumb-item">
+            <a class="breadcrumb-link" href="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getId())); ?>">Project</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Spending Request</li>
+        </ol>
+      </nav>
+
+      <div class="row">
+        <div class="col-lg-8">
+          <?php
+            $form->setAttribute('action', $this->url('project', array('action' => 'add-request', 'id' => $this->project->getId())));
+            $form->setAttribute('class', 'js-validate');
+            $form->setAttribute('id', 'myForm');
+            $form->prepare();
+            echo $this->form()->openTag($form);
+            ?>
+
+            <?php
+              $flash = $this->flashMessenger();
+              $flash->setMessageOpenFormat('<div%s role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  ')
+                  ->setMessageSeparatorString('')
+                  ->setMessageCloseString('</div>');
+
+              echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+              echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+              echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+              echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+               ?>
+
+            <!-- Form Group -->
+            <div class="js-form-message form-group">
+              <?= $this->formLabel($form->get('description')) ?>
+                <div class="input-group">
+                <?= $this->formElement($form->get('description')) ?>
+                </div>
+                <?= $this->formElementErrors()->render($form->get('description'), ['class' => 'help-block']) ?>
+            </div>
+            <!-- End Form Group -->
+
+            <!-- Form Group -->
+            <div class="js-form-message form-group">
+              <?= $this->formLabel($form->get('supplier_id')) ?>
+              <?= $this->formElement($form->get('supplier_id')) ?>
+              <?= $this->formElementErrors()->render($form->get('supplier_id'), ['class' => 'help-block']) ?>
+            </div>
+            <!-- End Form Group -->
+
+            <!-- Form Group -->
+            <div class="js-form-message form-group">
+              <?= $this->formLabel($form->get('amount')) ?>
+              <?= $this->formElement($form->get('amount')) ?>
+              <?= $this->formElementErrors()->render($form->get('amount'), ['class' => 'help-block']) ?>
+            </div>
+            <!-- End Form Group -->
+
+            <!-- Checkbox -->
+            <div class="js-form-message mb-5">
+              <div class="custom-control custom-checkbox d-flex align-items-center text-muted">
+                <input type="checkbox" class="custom-control-input" id="termsCheckbox" name="termsCheckbox" required
+                       data-msg="Please accept our Terms and Conditions."
+                       data-error-class="u-has-error"
+                       data-success-class="u-has-success">
+                <label class="custom-control-label" for="termsCheckbox">
+                  <small>
+                    I agree to the
+                    <a class="link-muted" href="#">Terms and Conditions</a>
+                  </small>
+                </label>
+              </div>
+            </div>
+            <!-- End Checkbox -->
+
+            <!-- Button -->
+            <div class="row align-items-center mb-5">
+              <div class="col-12">
+                <button id="myButton" type="submit" class="btn btn-primary transition-3d-hover">Create</button>
+              </div>
+            </div>
+            <!-- End Button -->
+          <?php echo $this->form()->closeTag();?>
+        </div>
+        <div class="col-md-4">
+          <div class="card my-4">
+            <h5 class="card-header"><?php echo $this->escapehtml($this->project->getName()); ?></h5>
+            <div class="card-body">
+              <div class="text-center">
+                <img class="img-fluid rounded" src="/img/project/<?php echo $this->project->getId(); ?>/photo-480x320.jpg" alt="">
+              </div>
+              <br>
+              <small>Posted on <?php echo date('M d, Y', strtotime($this->project->getCreatedDatetime())); ?></small>
+              <p>Owner Address: <a href="#"><?php echo $this->escapehtml($this->project->getEosPublicAddress()); ?></a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <!-- End Login Form -->
+<script>
+$(document).ready(function(){
+  $("#myForm").submit(function() {
+    signout();
+    return signin();
+  });
+});
+</script>

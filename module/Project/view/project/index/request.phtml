@@ -1,0 +1,119 @@
+<style>
+table{
+  font-size: 11px
+}
+.btn-success, .btn-danger{
+  font-size: 11px
+}
+.btn-warning{
+  font-size: 11px
+}
+</style>
+  <div class="container space-2">
+    <!-- Page Heading/Breadcrumbs -->
+    <h1><?php echo $this->escapehtml($this->project->getName()); ?></h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-primary breadcrumb-white">
+        <li class="breadcrumb-item">
+          <a class="breadcrumb-link" href="<?php echo $this->url('home'); ?>">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a class="breadcrumb-link" href="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getId())); ?>">View Project</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">View Request</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <div class="col-lg-9">
+        <small>Posted on <?php echo date('M d, Y', strtotime($this->project->getCreatedDatetime())); ?></small>
+        <p>Owner Address: <a href="#"><?php echo $this->escapehtml($this->project->getEosPublicAddress()); ?></a></p>
+        <hr>
+        <div class="float-right">
+          <a href="<?php echo $this->url('project', array('action' => 'add-request', 'id' => $this->project->getId())); ?>" class="btn btn-secondary">Add Request</a>
+        </div>
+        <div class="clearfix"></div><br>
+        <div class="card">
+          <div class="card-header">
+            Pending Requests
+          </div>
+          <div class="card-body">
+            <?php
+              $flash = $this->flashMessenger();
+              $flash->setMessageOpenFormat('<div%s role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  ')
+                  ->setMessageSeparatorString('')
+                  ->setMessageCloseString('</div>');
+
+              echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+              echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+              echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+              echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+               ?>
+
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Request</th>
+                  <th scope="col">Amount (PEOS)</th>
+                  <th scope="col">Recipient</th>
+                  <th scope="col">Approval Count</th>
+                  <th scope="col">Contributor Vote</th>
+                  <th scope="col">Manager Finalize</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($this->projectSpendingRequests as $row): ?>
+                <tr>
+                  <td><?php echo $this->escapehtml($row['id']); ?></td>
+                  <td><?php echo $this->escapehtml($row['description']); ?></td>
+                  <td><?php echo number_format($row['amount'], 8); ?></td>
+                  <td><?php echo $this->escapehtml($row['name']); ?></td>
+                  <td><?php echo $this->escapehtml($row['vote_yes']); ?> Yes / <?php echo $this->escapehtml($row['vote_no']); ?> No</td>
+                  <td>
+                    <?php if($row['is_finalized']!='Y'): ?>
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <a href="<?php echo $this->url('project' , array('action' => 'vote-yes', 'id' => $row['id'],)); ?>" class="btn btn-success btn-sm"><i class="fas fa-thumbs-up"></i></a>
+                        </div>
+                        <div class="col-lg-6">
+                          <a href="<?php echo $this->url('project' , array('action' => 'vote-no', 'id' => $row['id'],)); ?>" class="btn btn-danger btn-sm"><i class="fas fa-thumbs-down"></i></a>
+                        </div>
+                      </div>
+                    <?php else: ?>
+                      End of vote
+                    <?php endif; ?>
+                  </td>
+                  <td>
+
+                  </td>
+                </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card my-4">
+          <h5 class="card-header"><?php echo $this->escapehtml($this->project->getName()); ?></h5>
+          <div class="card-body">
+            <div class="text-center">
+              <img class="img-fluid rounded" src="/img/project/<?php echo $this->project->getId(); ?>/photo-480x320.jpg" alt="">
+            </div>
+            <br>
+            <small>Posted on <?php echo date('M d, Y', strtotime($this->project->getCreatedDatetime())); ?></small>
+            <p>Owner Address: <a href="#"><?php echo $this->escapehtml($this->project->getEosPublicAddress()); ?></a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- /.row -->
+  </div>
+<!-- End Login Form -->

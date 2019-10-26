@@ -1,0 +1,7 @@
+npm install -g truffle
+
+mkdir MySmartContract
+truffle init
+truffle compile
+
+truffle migrate

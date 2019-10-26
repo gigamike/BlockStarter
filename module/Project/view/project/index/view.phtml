@@ -1,0 +1,132 @@
+<!-- Login Form -->
+  <div class="container space-2">
+    <!-- Page Heading/Breadcrumbs -->
+    <h1><?php echo $this->escapehtml($this->project->getName()); ?></h1>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-primary breadcrumb-white">
+        <li class="breadcrumb-item">
+          <a class="breadcrumb-link" href="<?php echo $this->url('home'); ?>">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">View Project</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="text-center">
+          <img class="img-fluid rounded" src="/img/project/<?php echo $this->project->getId(); ?>/photo-480x320.jpg" alt="">
+        </div>
+        <hr>
+        <small>Posted on <?php echo date('M d, Y', strtotime($this->project->getCreatedDatetime())); ?></small>
+        <p>Owner Address: <a href="#"><?php echo $this->escapehtml($this->project->getEosPublicAddress()); ?></a></p>
+        <hr>
+        <p><?php echo $this->escapehtml($this->project->getDescription()); ?></p>
+        <hr>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header" style="background-color:#ffc107">
+                Project Balance
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo number_format($this->sumProjectContributorAmount, 8); ?> PEOS</h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header" style="background-color:#17a2b8">
+                Minimum Contribution
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo number_format($this->project->getMinimumContribution(), 8); ?> PEOS</h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header" style="background-color:#dc3545">
+                Pending Requests
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $this->countProjectSpendingRequest; ?></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-header" style="background-color:#28a745">
+                Contributors
+              </div>
+              <div class="card-body">
+                <h5 class="card-title"><?php echo $this->countProjectContributor; ?></h5>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <a href="<?php echo $this->url('project', array('action' => 'request', 'id' => $this->project->getId(),)); ?>" class="btn btn-primary">View Request</a>
+      </div>
+
+      <!-- Sidebar Widgets Column -->
+      <div class="col-md-4">
+        <!-- Side Widget -->
+        <div class="card">
+          <h5 class="card-header">Contribute to this project!</h5>
+          <div class="card-body">
+            <?php
+              $flash = $this->flashMessenger();
+              $flash->setMessageOpenFormat('<div%s role="alert">
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+                  ')
+                  ->setMessageSeparatorString('')
+                  ->setMessageCloseString('</div>');
+
+              echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+              echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+              echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+              echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+               ?>
+            <small>
+              I agree to the
+              <a class="link-muted" href="#">Terms and Conditions</a>
+            </small>
+            <form id="myForm" method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getId(),)); ?>">
+              <div class="form-row align-items-center">
+                <div class="col-sm-12 my-1">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">PEOS</div>
+                    </div>
+                    <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Amount" name="amount">
+                  </div>
+                </div>
+                <div class="col-auto my-1">
+                  <button type="submit" id="myButton" class="btn btn-success">Contribute</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /.row -->
+  </div>
+<!-- End Login Form -->
+
+<script>
+$(document).ready(function(){
+  $("#myButton").click(function() {
+    return signin();
+  });
+  $("#myForm").submit(function() {
+    return signin();
+  });
+});
+</script>

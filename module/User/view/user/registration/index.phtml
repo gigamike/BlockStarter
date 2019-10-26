@@ -1,0 +1,155 @@
+<div class="card o-hidden border-0 shadow-lg my-5">
+  <div class="card-body p-0">
+    <!-- Nested Row within Card Body -->
+    <div class="row">
+      <div class="col-lg-5 d-none d-lg-block">
+        <a href="<?php echo $this->url('home'); ?>"><img src="/img/registration.jpg"></a>
+      </div>
+      <div class="col-lg-7">
+        <div class="p-5">
+          <div class="text-center">
+            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+          </div>
+          <?php
+          $form->setAttribute('action', $this->url('registration'));
+          $form->setAttribute('name', 'registraion');
+          $form->setAttribute('class', 'user');
+          $form->prepare();
+          echo $this->form()->openTag($form);
+          ?>
+          <?= $this->formElement($form->get('security')) ?>
+            <div class="form-group">
+              <?= $this->formElement($form->get('role')) ?>
+              <?= $this->formElementErrors()->render($form->get('role'), ['class' => 'help-block']) ?>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-6 mb-3 mb-sm-0">
+                <?= $this->formElement($form->get('first_name')) ?>
+                <?= $this->formElementErrors()->render($form->get('first_name'), ['class' => 'help-block']) ?>
+              </div>
+              <div class="col-sm-6">
+                <?= $this->formElement($form->get('last_name')) ?>
+                <?= $this->formElementErrors()->render($form->get('last_name'), ['class' => 'help-block']) ?>
+              </div>
+            </div>
+            <div class="form-group">
+              <?= $this->formElement($form->get('email')) ?>
+              <?= $this->formElementErrors()->render($form->get('email'), ['class' => 'help-block']) ?>
+            </div>
+            <div class="form-group row">
+              <div class="col-sm-6 mb-3 mb-sm-0">
+                <?= $this->formElement($form->get('password')) ?>
+                <?= $this->formElementErrors()->render($form->get('password'), ['class' => 'help-block']) ?>
+              </div>
+              <div class="col-sm-6">
+                <?= $this->formElement($form->get('confirm_password')) ?>
+                <?= $this->formElementErrors()->render($form->get('confirm_password'), ['class' => 'help-block']) ?>
+              </div>
+            </div>
+            <div class="form-group" id="wrapper-company_name">
+              <?= $this->formElement($form->get('company_name')) ?>
+              <?= $this->formElementErrors()->render($form->get('company_name'), ['class' => 'help-block']) ?>
+            </div>
+            <div class="form-group" id="wrapper-company_address">
+              <?= $this->formElement($form->get('company_address')) ?>
+              <?= $this->formElementErrors()->render($form->get('company_address'), ['class' => 'help-block']) ?>
+            </div>
+            <div class="form-group" id="wrapper-company_logo">
+              <?= $this->formLabel($form->get('company_logo')) ?>
+              <?= $this->formFile($form->get('company_logo')) ?>
+              <?= $this->formElementErrors()->render($form->get('mayors_permit'), ['class' => 'help-block']) ?>
+              <ul class="help-block">
+                <li>File Types: jpg, jpeg, png</li>
+              </ul>
+            </div>
+            <div class="form-group">
+              <?= $this->formElement($form->get('mobile_no')) ?>
+              <?= $this->formElementErrors()->render($form->get('mobile_no'), ['class' => 'help-block']) ?>
+            </div>
+            <div class="form-group row" id="wrapper-docs">
+              <div class="col-sm-6 mb-3 mb-sm-0">
+                <?= $this->formLabel($form->get('mayors_permit')) ?>
+                <?= $this->formFile($form->get('mayors_permit')) ?>
+                <?= $this->formElementErrors()->render($form->get('mayors_permit'), ['class' => 'help-block']) ?>
+                <ul class="help-block">
+                  <li>File Types: jpg, jpeg, png</li>
+                </ul>
+              </div>
+              <div class="col-sm-6">
+                <?= $this->formLabel($form->get('bir_certificate')) ?>
+                <?= $this->formFile($form->get('bir_certificate')) ?>
+                <?= $this->formElementErrors()->render($form->get('bir_certificate'), ['class' => 'help-block']) ?>
+                <ul class="help-block">
+                  <li>File Types: jpg, jpeg, png</li>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group">
+              <?= $this->formElement($form->get('captcha')) ?>
+              <?= $this->formLabel($form->get('captcha')) ?>
+              <?= $this->formElementErrors()->render($form->get('captcha'), ['class' => 'help-block']) ?>
+            </div>
+            <?php echo $this->formSubmit($form->get('submit')); ?>
+          <?php echo $this->form()->closeTag();?>
+          <hr>
+          <div class="text-center">
+            <a class="small" href="#">Forgot Password?</a>
+          </div>
+          <div class="text-center">
+            <a class="small" href="<?php echo $this->url('home'); ?>">Already have an account? Login!</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    function role(){
+      var role = $("#role").val();
+
+      if(role == 'supplier'){
+        $("#wrapper-company_name").show();
+        $("#wrapper-company_address").show();
+        $("#wrapper-company_logo").show();
+        $("#wrapper-docs").show();
+        $("#company_name").attr("required","required");
+        $("#company_address").attr("required","required");
+      }else if(role == 'manager-operation'){
+        $("#wrapper-company_name").hide();
+        $("#wrapper-company_address").hide();
+        $("#wrapper-company_logo").hide();
+        $("#wrapper-docs").hide();
+        $("#company_name").removeAttr("required");
+        $("#company_address").removeAttr("required");
+      }else if(role == 'manager-finance'){
+        $("#wrapper-company_name").hide();
+        $("#wrapper-company_address").hide();
+        $("#wrapper-company_logo").hide();
+        $("#wrapper-docs").hide();
+        $("#company_name").removeAttr("required");
+        $("#company_address").removeAttr("required");
+      }else if(role == 'engineer'){
+        $("#wrapper-company_name").hide();
+        $("#wrapper-company_address").hide();
+        $("#wrapper-company_logo").hide();
+        $("#wrapper-docs").hide();
+        $("#company_name").removeAttr("required");
+        $("#company_address").removeAttr("required");
+      }else{
+        $("#wrapper-company_name").hide();
+        $("#wrapper-company_address").hide();
+        $("#wrapper-company_logo").hide();
+        $("#wrapper-docs").hide();
+        $("#company_name").removeAttr("required");
+        $("#company_address").removeAttr("required");
+      }
+    }
+
+    $("#role").change(function() {
+      role()
+    });
+    role();
+  });
+</script>
