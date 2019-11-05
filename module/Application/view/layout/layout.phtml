@@ -9,8 +9,11 @@
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.css')
                         ->prependStylesheet($this->basePath() . '/css/modern-business.css')
+                        ->prependStylesheet($this->basePath() . '/vendor/fontawesome-free/css/all.min.css')
+                        ->prependStylesheet($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.css')
                         ->prependStylesheet($this->basePath() . '/vendor/bootstrap/css/bootstrap.min.css') ?>
         <?php echo $this->headScript()
+            ->prependFile($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.js')
             ->prependFile($this->basePath() . '/vendor/bootstrap/js/bootstrap.bundle.min.js')
             ->prependFile($this->basePath() . '/vendor/jquery/jquery.min.js')
         ; ?>
@@ -25,20 +28,44 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
+              <?php if ($user = $this->identity()): ?>
+                <?php if ($user->role == 'member'): ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url('member'); ?>"><i class="fas fa-user"></i> <?php echo $user->first_name; ?></a>
+                  </li>
+                <?php endif; ?>
+                <?php if ($user->role == 'supplier'): ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url('member'); ?>"><i class="fas fa-user"></i> <?php echo $user->first_name; ?></a>
+                  </li>
+                <?php endif; ?>
+                <?php if ($user->role == 'reseller'): ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="<?php echo $this->url('member'); ?>"><i class="fas fa-user"></i> <?php echo $user->first_name; ?></a>
+                  </li>
+                <?php endif; ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?php echo $this->url('logout'); ?>"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+              <?php else: ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?php echo $this->url('registration'); ?>"><i class="fas fa-registered"></i> Register</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="<?php echo $this->url('login'); ?>"><i class="fas fa-sign-in-alt"></i> Sign in</a>
+                </li>
+              <?php endif; ?>
               <li class="nav-item">
                 <a class="nav-link" href="#">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Suppliers</a>
+                <a class="nav-link" href="<?php echo $this->url('suppliers'); ?>">Suppliers</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Affiliates</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="#">Contact Us</a>
               </li>
             </ul>
           </div>

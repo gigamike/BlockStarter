@@ -138,6 +138,78 @@ return array(
                     ),
                 ),
             ),
+            'suppliers' => array(
+              'type' => 'segment',
+              'options' => array(
+                'route'    => '/suppliers/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'constraints' => array(
+                  'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'id' => '[0-9]+',
+                  'page' => '[0-9]+',
+                  'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'order' => 'ASC|DESC',
+                  'search_by' => '.*',
+                ),
+                'defaults' => array(
+                  'controller' => 'Supplier\Controller\Index',
+                  'action'     => 'index',
+                ),
+              ),
+            ),
+            'supplier' => array(
+              'type' => 'segment',
+              'options' => array(
+                'route'    => '/supplier/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'constraints' => array(
+                  'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'id' => '[0-9]+',
+                  'page' => '[0-9]+',
+                  'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'order' => 'ASC|DESC',
+                  'search_by' => '.*',
+                ),
+                'defaults' => array(
+                  'controller' => 'Supplier\Controller\Index',
+                  'action'     => 'index',
+                ),
+              ),
+            ),
+            'member' => array(
+              'type' => 'segment',
+              'options' => array(
+                'route'    => '/member/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'constraints' => array(
+                  'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'id' => '[0-9]+',
+                  'page' => '[0-9]+',
+                  'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'order' => 'ASC|DESC',
+                  'search_by' => '.*',
+                ),
+                'defaults' => array(
+                  'controller' => 'Member\Controller\Index',
+                  'action'     => 'index',
+                ),
+              ),
+            ),
+            'reseller' => array(
+              'type' => 'segment',
+              'options' => array(
+                'route'    => '/reseller/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'constraints' => array(
+                  'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'id' => '[0-9]+',
+                  'page' => '[0-9]+',
+                  'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'order' => 'ASC|DESC',
+                  'search_by' => '.*',
+                ),
+                'defaults' => array(
+                  'controller' => 'Reseller\Controller\Index',
+                  'action'     => 'index',
+                ),
+              ),
+            ),
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them

@@ -9,12 +9,12 @@ class UserEntity
 	protected $password;
 	protected $first_name;
 	protected $last_name;
-	protected $company_name;
-	protected $company_address;
-	protected $mobile_no;
+	protected $city;
+	protected $country_id;
 	protected $public_address;
 	protected $salt;
 	protected $active;
+	protected $referrer_user_id;
 	protected $created_datetime;
 	protected $created_user_id;
 
@@ -83,34 +83,24 @@ class UserEntity
 		$this->last_name = $value;
 	}
 
-	public function setCompanyName($value)
+	public function setCity($value)
 	{
-		$this->company_name = $value;
+		$this->city = $value;
 	}
 
-	public function getCompanyName()
+	public function getCity()
 	{
-		return $this->company_name;
+		return $this->city;
 	}
 
-	public function setCompanyAddress($value)
+	public function setCountryId($value)
 	{
-		$this->company_address = $value;
+		$this->country_id = $value;
 	}
 
-	public function getCompanyAddress()
+	public function getCountryId()
 	{
-		return $this->company_address;
-	}
-
-	public function getMobileNo()
-	{
-		return $this->mobile_no;
-	}
-
-	public function setMobileNo($value)
-	{
-		$this->mobile_no = $value;
+		return $this->country_id;
 	}
 
 	public function getPublicAddress()
@@ -141,6 +131,16 @@ class UserEntity
 	public function getActive()
 	{
 		return $this->active;
+	}
+
+	public function setReferrerUserId($value)
+	{
+		$this->referrer_user_id = $value;
+	}
+
+	public function getReferrerUserId()
+	{
+		return $this->referrer_user_id;
 	}
 
 	public function getCreatedDatetime()

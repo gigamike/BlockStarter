@@ -11,6 +11,13 @@ return array(
 		'chatbot',
 		'smart-contract',
 		'project',
+		'suppliers',
+	),
+	'supplier'=> array(
+		'supplier',
+	),
+	'member'=> array(
+		'member',
 	),
 	'admin'=> array(
 		'admin',

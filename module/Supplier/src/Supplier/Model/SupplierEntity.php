@@ -6,8 +6,9 @@ class SupplierEntity
 	protected $id;
 	protected $name;
 	protected $description;
-	protected $eos_public_address;
+	protected $public_address;
 	protected $created_datetime;
+	protected $created_user_id;
 
 	public function __construct()
 	{
@@ -44,14 +45,14 @@ class SupplierEntity
 		$this->description = $value;
 	}
 
-	public function getEosPublicAddress()
+	public function getPublicAddress()
 	{
-		return $this->eos_public_address;
+		return $this->public_address;
 	}
 
-	public function setEosPublicAddress($value)
+	public function setPublicAddress($value)
 	{
-		$this->eos_public_address = $value;
+		$this->public_address = $value;
 	}
 
 	public function getCreatedDatetime()
@@ -62,5 +63,15 @@ class SupplierEntity
 	public function setCreatedDatetime($value)
 	{
 		$this->created_datetime = $value;
+	}
+
+	public function getCreatedUserId()
+	{
+		return $this->created_user_id;
+	}
+
+	public function setCreatedUserId($value)
+	{
+		$this->created_user_id = $value;
 	}
 }

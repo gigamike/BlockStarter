@@ -1,0 +1,205 @@
+<!-- Page Heading/Breadcrumbs -->
+<h1 class="mt-4 mb-3">Welcome
+  <small>
+    <?php if ($this->user->getRole() == 'doctor'): ?>
+      <?php if($this->user->getGender() == 'f'): ?>
+      Dra.
+    <?php else: ?>
+      Dr.
+    <?php endif; ?><?php endif; ?>
+    <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
+</h1>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="<?php echo $this->url('member'); ?>">Home</a>
+  </li>
+  <li class="breadcrumb-item active">Checkup</li>
+</ol>
+
+<div class="row">
+
+   <!-- Sidebar Column -->
+   <div class="col-lg-3 mb-4">
+     <?php echo $this->partial('partial/member/menu.phtml', array(
+         'route' => $this->route,
+         'action' => $this->action,
+     )); ?>
+   </div>
+   <!-- Sidebar Column -->
+   <!-- Content Column -->
+   <div class="col-lg-9 mb-4">
+
+     <div class="row">
+        <div class="col-lg-12 mb-4">
+          <h2>Checkup/Consultations</h2>
+          <?php
+          $flash = $this->flashMessenger();
+          $flash->setMessageOpenFormat('<div%s role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              ')
+              ->setMessageSeparatorString('')
+              ->setMessageCloseString('</div>');
+
+          echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+          echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+          echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+          echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+           ?>
+           <?php if ($user = $this->identity()): ?>
+             <?php if ($user->role == 'patient'): ?>
+          <div class="card">
+            <div class="card-header">Doctor Information</div>
+            <div class="card-body">
+              <div class="row">
+                 <div class="col-lg-4">
+                    <img class="img-fluid" src="/img/user/<?php echo $this->doctor->getId(); ?>/photo-750x450.jpg">
+                  </div>
+                  <div class="col-lg-8">
+                    <h5 class="card-title"><p><strong>Name: </strong><?php if($this->doctor->getGender() == 'f'): ?>Dra.<?php else: ?>Dr.<?php endif; ?>
+                    <?php echo $this->escapehtml($this->doctor->getFirstName()); ?> <?php echo $this->escapehtml($this->doctor->getLastName()); ?> (<?php echo $this->escapehtml($this->doctor->getTitle()); ?>) <span class="online">Online</span></p></h5>
+                    <p class="card-text"><strong>Location: </strong><?php echo $this->escapehtml($this->user->getCity()); ?>, <?php echo $this->escapehtml($this->getCountry($this->doctor->getCountryId())); ?></p>
+                  </div>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+        <?php if ($user->role == 'doctor'): ?>
+          <div class="card">
+            <div class="card-header">Patient Information</div>
+            <div class="card-body">
+              <div class="row">
+                 <div class="col-lg-4">
+                    <img class="img-fluid" src="/img/user/<?php echo $this->doctor->getId(); ?>/photo-750x450.jpg">
+                  </div>
+                  <div class="col-lg-8">
+                    <h5 class="card-title"><p><strong>Name:
+                    <?php echo $this->escapehtml($this->doctor->getFirstName()); ?> <?php echo $this->escapehtml($this->doctor->getLastName()); ?> <span class="online">Online</span></p></h5>
+                    <p class="card-text"><strong>Location: </strong><?php echo $this->escapehtml($this->doctor->getCity()); ?>, <?php echo $this->escapehtml($this->getCountry($this->doctor->getCountryId())); ?></p>
+                  </div>
+              </div>
+            </div>
+          </div>
+        <?php endif; ?>
+        <?php endif; ?>
+
+        </div>
+     </div>
+
+     <?php if ($user->role == 'doctor'): ?>
+       <iframe src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8a98dea6-e5e8-4514-a9f0-aefc1a6f7438&room=DEFAULT_ROOM&iframe=true" width="800px" height="640px" scrolling="auto" allow="microphone; camera" ></iframe>
+      <?php endif; ?>
+
+      <?php if ($user->role == 'patient'): ?>
+        <?php if($this->status!='success') :?>
+        <h2>Payment Methods</h2>
+        <?php endif; ?>
+        <div class="row">
+          <div class="col-lg-12">
+            <?php if($this->status!='success') :?>
+              <div class="row">
+                <div class="col-lg-4 mb-4">
+                  <div class="card h-100">
+                    <h3 class="card-header" style="color:#05314c">PayMaya</h3>
+                    <div class="card-body">
+                      <div>₱1000.00</div>
+                      <div class="font-italic">per consultation</div>
+                      <img class="img-fluid" src="/img/paymaya.jpg">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <a href="#" class="btn btn-primary">Pay Now</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                  <div class="card card-outline-primary h-100">
+                    <h3 class="card-header bg-primary" style="color:#e83c34">TagCash</h3>
+                    <div class="card-body">
+                      <div>₱1000.00</div>
+                      <div class="font-italic">per consultation</div>
+                      <br><br>
+                      <img class="img-fluid" src="/img/tagcash.png">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <a href="<?php echo $this->url('member', ['action' => 'tag-cash', 'id' => $this->doctor->getId()]); ?>" class="btn btn-primary">Pay Now</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                  <div class="card h-100">
+                    <h3 class="card-header" style="color:#05314c">GCash</h3>
+                    <div class="card-body">
+                      <div>₱1000.00</div>
+                      <div class="font-italic">per consultation</div>
+                      <br><br>
+                      <img class="img-fluid" src="/img/gcash.jpg">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <a href="#" class="btn btn-primary">Pay Now</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="col-lg-4 mb-4">
+                  <div class="card h-100">
+                    <h3 class="card-header" style="color:#f7931a">Bitcoin</h3>
+                    <div class="card-body">
+                      <div>₿0.0021</div>
+                      <div class="font-italic">per consultation</div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <strong>Public Address: </strong> <?php echo $this->escapehtml($this->user->getPublicAddress()); ?>
+                        <img class="img-fluid" src="<?php echo $this->getQRCode($this->user->getPublicAddress(), 200, 200); ?>">
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-lg-4 mb-4">
+                  <div class="card h-100">
+                    <h3 class="card-header" style="color:#002e82">Paypal</h3>
+                    <div class="card-body">
+                      <div>₱1000.00</div>
+                      <div class="font-italic">per consultation</div>
+                      <br><br>
+                      <img class="img-fluid" src="/img/paypal.png">
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">
+                        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                        <input type="hidden" name="cmd" value="_s-xclick">
+                        <input type="hidden" name="hosted_button_id" value="4S9EPPPDVXMGS">
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+         <?php else: ?>
+             <iframe src="https://tokbox.com/embed/embed/ot-embed.js?embedId=8a98dea6-e5e8-4514-a9f0-aefc1a6f7438&room=DEFAULT_ROOM&iframe=true" width="800px" height="640px" scrolling="auto" allow="microphone; camera" ></iframe>
+           <?php endif; ?>
+
+          </div>
+        </div>
+        <?php endif; ?>
+
+
+   </div>
+    <!-- Content Column -->
+</div>
+<script type="text/javascript">
+(function blink() {
+  $('.online').fadeOut(500).fadeIn(500, blink);
+
+})();
+</script>

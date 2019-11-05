@@ -1,0 +1,73 @@
+<!-- Page Heading/Breadcrumbs -->
+<h1 class="mt-4 mb-3">Welcome
+  <small>
+    <?php if ($this->user->getRole() == 'doctor'): ?>
+      <?php if($this->user->getGender() == 'f'): ?>
+      Dra.
+    <?php else: ?>
+      Dr.
+    <?php endif; ?><?php endif; ?>
+    <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
+</h1>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="<?php echo $this->url('member'); ?>">Home</a>
+  </li>
+  <li class="breadcrumb-item active">Health Care</li>
+</ol>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Sidebar Column -->
+    <div class="col-lg-3 mb-4">
+      <?php echo $this->partial('partial/member/menu.phtml', array(
+          'route' => $this->route,
+          'action' => $this->action,
+      )); ?>
+    </div>
+  <!-- Content Column -->
+  <div class="col-lg-9 mb-4">
+    <h2>Health Care</h2>
+    <h4 class="alert-heading">How to get incentives?</h4>
+          <p>Want to earn credits? Just be healthy and always reach your goal.</p>
+
+
+
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Month</th>
+              <th scope="col">Height (centimeters)</th>
+              <th scope="col">Weight (kilograms)</th>
+              <th scope="col">BMI</th>
+              <th scope="col">BMI Category</th>
+              <th scope="col">Incentives/Credits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($this->incentives as $incentive): ?>
+            <tr <?php if($incentive['bmi_category']!='normal weight'): ?>class="table-danger"<?php else: ?>class="table-success"<?php endif; ?>>
+              <th><?php echo date('M', strtotime($incentive['year'] . "-" . $incentive['month'] . "-1")); ?> <?php echo $incentive['year']; ?></th>
+              <td><?php echo $incentive['height_centimeters']; ?> centimeters</td>
+              <td><?php echo $incentive['weight_kilograms']; ?> kilograms</td>
+              <td><?php echo $incentive['bmi']; ?></td>
+              <td><?php echo $incentive['bmi_category']; ?></td>
+              <td><?php echo number_format($incentive['incentive'], 2); ?></td>
+            </tr>
+          <?php endforeach; ?>
+          </tbody>
+        </table>
+
+        <strong>Legends</strong>
+        <div class="red"><i class="fas fa-thumbs-down"></i> Under weight</div>
+        <div class="green"><i class="fas fa-trophy"></i> Normal weight = +10 credits</div>
+        <div class="red"><i class="fas fa-thumbs-down"></i> Overweight</div>
+        <div class="red"><i class="fas fa-thumbs-down"></i> Obese</div>
+  </div>
+  <!-- /.container-fluid -->
+
+  </div>
+</div>
+<!-- /.row -->

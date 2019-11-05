@@ -50,9 +50,6 @@ class LoginForm extends Form
             'options' => [
                 'label' => 'Remember me',
             ],
-            'attributes' => [
-                'class' => 'custom-control-input',
-            ],
         ]);
 
         $this->add([

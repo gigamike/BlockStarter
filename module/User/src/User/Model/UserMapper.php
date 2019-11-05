@@ -143,6 +143,24 @@ class UserMapper
 		return $user;
 	}
 
+	public function getUserByPublicAddress($public_address)
+	{
+		$select = $this->sql->select();
+		$select->where(array('public_address' => $public_address));
+
+		$statement = $this->sql->prepareStatementForSqlObject($select);
+		$result = $statement->execute()->current();
+		if (!$result) {
+			return null;
+		}
+
+		$hydrator = new ClassMethods();
+		$user = new UserEntity();
+		$hydrator->hydrate($result, $user);
+
+		return $user;
+	}
+
 	public function getUserByEmail($email)
 	{
 		$select = $this->sql->select();

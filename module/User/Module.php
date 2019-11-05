@@ -5,6 +5,7 @@ use Zend\Authentication\AuthenticationService;
 use User\Model\UserMapper;
 use User\Form\RegistrationForm;
 use User\Form\ForgotPasswordForm;
+use Country\Model\CountryMapper;
 
 class Module
 {
@@ -39,7 +40,10 @@ class Module
 					},
           'RegistrationForm' => function ($sm) {
             $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-            $form = new RegistrationForm($dbAdapter);
+
+            $countryMapper = new CountryMapper($dbAdapter);
+
+            $form = new RegistrationForm($dbAdapter, $countryMapper);
             return $form;
           },
           'ForgotPasswordForm' => function ($sm) {

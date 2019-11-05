@@ -127,7 +127,7 @@ class IndexController extends AbstractActionController
     	}
     });
     */
-
+/*
     $eth = $web3->eth;
     echo 'Eth Send Transaction' . PHP_EOL;
     $eth->accounts(function ($err, $accounts) use ($eth) {
@@ -182,7 +182,7 @@ class IndexController extends AbstractActionController
     });
 
     exit();
-
+*/
     $form = $this->getServiceLocator()->get('ProjectForm');
     $user = new ProjectEntity();
     if($this->getRequest()->isPost()) {

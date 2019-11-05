@@ -1,0 +1,146 @@
+<!-- Page Heading/Breadcrumbs -->
+<h1 class="mt-4 mb-3">Welcome
+  <small>
+    <?php if ($this->user->getRole() == 'doctor'): ?>
+      <?php if($this->user->getGender() == 'f'): ?>
+      Dra.
+    <?php else: ?>
+      Dr.
+    <?php endif; ?><?php endif; ?>
+    <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
+</h1>
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="<?php echo $this->url('member'); ?>">Home</a>
+  </li>
+  <li class="breadcrumb-item active">Checkup/Consultations</li>
+</ol>
+
+<!-- Content Row -->
+<div class="row">
+
+  <!-- Sidebar Column -->
+  <div class="col-lg-3 mb-4">
+    <?php echo $this->partial('partial/member/menu.phtml', array(
+        'route' => $this->route,
+        'action' => $this->action,
+    )); ?>
+  </div>
+
+  <!-- Content Column -->
+  <div class="col-lg-9 mb-4">
+    <h2>Checkup/Consultations</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta, et temporibus, facere perferendis veniam beatae non debitis, numquam blanditiis necessitatibus vel mollitia dolorum laudantium, voluptate dolores iure maxime ducimus fugit.</p>
+
+    <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold">New Medical Record</h6>
+              </div>
+              <div class="card-body">
+                <?php
+        $flash = $this->flashMessenger();
+        $flash->setMessageOpenFormat('<div%s role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            ')
+            ->setMessageSeparatorString('')
+            ->setMessageCloseString('</div>');
+
+        echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+        echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+        echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+        echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+         ?>
+
+                <form method="post">
+                  <div class="form-group">
+                    <div class="form-row">
+                      <div class="form-group col-md-12">
+                        <label for="inputEmail4">Patient (Public Address):</label>
+                        <input type="text" class="form-control item" placeholder="Patient (Public Address)" name="patient_public_address" readonly value="<?php echo $this->patient->getPublicAddress(); ?>">
+                      </div>
+                      <div class="form-group col-md-12">
+                        <label for="inputEmail4">Diagnose By (Public Address):</label>
+                        <input type="text" class="form-control item" placeholder="Diagnose By (Public Address)" name="doctor_public_address" readonly value="<?php echo $this->user->getPublicAddress(); ?>">
+                      </div>
+                      <div class="form-group col-md-12">
+                        <label for="inputEmail4">Diagnostics:</label>
+                        <textarea required onkeyup="countChar(this)" class="form-control" placeholder="" name="diagnostics" id="diagnostics" rows="3"></textarea>
+                        Character Count: <span id="diagnostics_count"></span>
+                      </div>
+                      <div class="form-group col-md-12">
+                        <label for="inputEmail4">Medical Prescription:</label>
+                        <textarea required onkeyup="countChar(this)" class="form-control" placeholder="" name="medical_prescription" id="medical_prescription" rows="3"></textarea>
+                        Character Count: <span id="medical_prescription_count"></span>
+                      </div>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+            </div>
+
+
+            <div class="card shadow mb-4">
+                      <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold">Checkup History</h6>
+                      </div>
+                      <div class="card-body">
+                        <table class="table table-bordered table-hover">
+                          <thead>
+                            <tr>
+                              <th scope="col">Date</th>
+                              <th scope="col">Diagnostic</th>
+                              <th scope="col">Doctor</th>
+                              <th scope="col">View</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row">Jun 29, 2019</th>
+                              <td>Chest Pain</td>
+                              <td>0x8f3bd092c2cb671dfd76fa9a3edce8dc53cf7edd</td>
+                              <td><a href="#">View</a></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">July 29, 2019</th>
+                              <td>Chest Pain</td>
+                              <td>0x8f3bd092c2cb671dfd76fa9a3edce8dc53cf7edd</td>
+                              <td><a href="#">View</a></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Aug 29, 2019</th>
+                              <td>Chest Pain</td>
+                              <td>0x8f3bd092c2cb671dfd76fa9a3edce8dc53cf7edd</td>
+                              <td><a href="#">View</a></td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Sep 29, 2019</th>
+                              <td>Chest Pain</td>
+                              <td>0x8f3bd092c2cb671dfd76fa9a3edce8dc53cf7edd</td>
+                              <td><a href="#">View</a></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+          </div>
+
+  </div>
+  <!-- /.container-fluid -->
+
+  </div>
+</div>
+<!-- /.row -->
+
+<script>
+$( document ).ready(function() {
+  $("#diagnostics").on("input", function() {
+    $("#diagnostics_count").text(this.value.length);
+  });
+  $("#medical_prescription").on("input", function() {
+    $("#medical_prescription_count").text(this.value.length);
+  });
+});
+</script>
