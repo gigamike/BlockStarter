@@ -184,7 +184,7 @@ class RegistrationController extends AbstractActionController
                 $supplier->setCreatedUserId($user->getId());
                 $this->getSupplierMapper()->save($supplier);
 
-                $directory = $config['pathSupplier']['absolutePath'] . $user->getId();
+                $directory = $config['pathSupplier']['absolutePath'] . $supplier->getId();
                 if(!file_exists($directory)){
                   mkdir($directory, 0755);
                 }
