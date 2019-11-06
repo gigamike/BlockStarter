@@ -10,12 +10,6 @@ use Gumlet\ImageResize;
 
 class IndexController extends AbstractActionController
 {
-  public function getIncentiveMapper()
-  {
-    $sm = $this->getServiceLocator();
-    return $sm->get('IncentiveMapper');
-  }
-
   public function getProductMapper()
   {
     $sm = $this->getServiceLocator();
@@ -26,12 +20,6 @@ class IndexController extends AbstractActionController
   {
     $sm = $this->getServiceLocator();
     return $sm->get('UserMapper');
-  }
-
-  public function getMedicalRecordMapper()
-  {
-    $sm = $this->getServiceLocator();
-    return $sm->get('MedicalRecordMapper');
   }
 
   public function indexAction()

@@ -2,12 +2,12 @@
 return array(
 		'controllers' => array(
 			'invokables' => array(
-				'Chatbot\Controller\Index' => 'Chatbot\Controller\IndexController',
+				'Invest\Controller\Index' => 'Invest\Controller\IndexController',
 			),
 		),
 		'view_manager' => array(
 				'template_path_stack' => array(
-						'chatbot' => __DIR__ . '/../view',
+						'invest' => __DIR__ . '/../view',
 				),
 		),
 );

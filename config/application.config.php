@@ -5,13 +5,14 @@ return array(
         'Application',
         'User',
         'Cron',
-        'Chatbot',
         'SmartContract',
         'Project',
         'Supplier',
         'Test',
         'Country',
         'Member',
+        'Invest',
+        'Affiliate',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

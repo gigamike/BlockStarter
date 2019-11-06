@@ -192,10 +192,10 @@ return array(
                 ),
               ),
             ),
-            'reseller' => array(
+            'affiliate' => array(
               'type' => 'segment',
               'options' => array(
-                'route'    => '/reseller/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'route'    => '/affiliate/[:action][/:id][/page/:page][/search_by/:search_by]',
                 'constraints' => array(
                   'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                   'id' => '[0-9]+',
@@ -205,7 +205,25 @@ return array(
                   'search_by' => '.*',
                 ),
                 'defaults' => array(
-                  'controller' => 'Reseller\Controller\Index',
+                  'controller' => 'Affiliate\Controller\Index',
+                  'action'     => 'index',
+                ),
+              ),
+            ),
+            'invest' => array(
+              'type' => 'segment',
+              'options' => array(
+                'route'    => '/invest/[:action][/:id][/page/:page][/search_by/:search_by]',
+                'constraints' => array(
+                  'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'id' => '[0-9]+',
+                  'page' => '[0-9]+',
+                  'order_by' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                  'order' => 'ASC|DESC',
+                  'search_by' => '.*',
+                ),
+                'defaults' => array(
+                  'controller' => 'Invest\Controller\Index',
                   'action'     => 'index',
                 ),
               ),

@@ -10,7 +10,6 @@ return array(
 		'cron-test',
 		'chatbot',
 		'smart-contract',
-		'project',
 		'suppliers',
 	),
 	'supplier'=> array(
@@ -18,6 +17,9 @@ return array(
 	),
 	'member'=> array(
 		'member',
+		'project',
+		'invest',
+		'affiliate',
 	),
 	'admin'=> array(
 		'admin',

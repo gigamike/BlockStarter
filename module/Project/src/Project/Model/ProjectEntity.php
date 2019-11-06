@@ -75,4 +75,14 @@ class ProjectEntity
 	{
 		$this->created_datetime = $value;
 	}
+
+	public function getCreatedUserId()
+	{
+		return $this->created_user_id;
+	}
+
+	public function setCreatedUserId($value)
+	{
+		$this->created_user_id = $value;
+	}
 }

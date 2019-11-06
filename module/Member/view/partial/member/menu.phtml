@@ -1,13 +1,9 @@
 <div class="list-group">
   <a href="<?php echo $this->url('member'); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='index'): ?>active<?php endif; ?>">Dashboard</a>
-  <a href="<?php echo $this->url('member', array('action' => 'profile',)); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='project'): ?>active<?php endif; ?>">Project</a>
-  <a href="<?php echo $this->url('member', array('action' => 'profile',)); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='invest'): ?>active<?php endif; ?>">Invest</a>
-  <a href="<?php echo $this->url('member', array('action' => 'profile',)); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='affiliate'): ?>active<?php endif; ?>">Affiliate</a>
-  <?php if ($user = $this->identity()): ?>
-    <?php if ($user->role == 'supplier'): ?>
-      <a href="<?php echo $this->url('member', array('action' => 'supplier',)); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='supplier'): ?>active<?php endif; ?>">Purchase Order</a>
-    <?php endif; ?>
-  <?php endif; ?>
+  <a href="<?php echo $this->url('project'); ?>" class="list-group-item <?php if($this->route=='project'): ?>active<?php endif; ?>">My Projects</a>
+  <a href="<?php echo $this->url('supplier'); ?>" class="list-group-item <?php if($this->route=='supplier'): ?>active<?php endif; ?>">Purchase Order</a>
+  <a href="<?php echo $this->url('invest'); ?>" class="list-group-item <?php if($this->route=='invest'): ?>active<?php endif; ?>">Invest</a>
+  <a href="<?php echo $this->url('affiliate'); ?>" class="list-group-item <?php if($this->route=='affiliate'): ?>active<?php endif; ?>">Affiliate</a>
   <a href="<?php echo $this->url('member', array('action' => 'profile',)); ?>" class="list-group-item <?php if($this->route=='member' && $this->action=='profile'): ?>active<?php endif; ?>">My Profile</a>
   <a href="<?php echo $this->url('logout'); ?>" class="list-group-item">Logout</a>
 </div>

@@ -35,8 +35,16 @@ class ProjectMapper
 			$where->equalTo("id", $filter['id']);
 		}
 
+		if(isset($filter['created_user_id_not'])){
+	    $where->notEqualTo("created_user_id", $filter['created_user_id_not']);
+		}
+
 		if(isset($filter['name'])){
-		    $where->equalTo("name", $filter['name']);
+	    $where->equalTo("name", $filter['name']);
+		}
+
+		if(isset($filter['name'])){
+	    $where->equalTo("name", $filter['name']);
 		}
 
 		if(isset($filter['name_keyword'])){

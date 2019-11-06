@@ -6,10 +6,7 @@ use Zend\Db\Adapter\Adapter;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-use Project\Model\ProjectContributorEntity;
 use Project\Model\ProjectEntity;
-use Project\Model\ProjectSpendingRequestEntity;
-use Project\Model\ProjectSpendingRequestVoteEntity;
 
 use Gumlet\ImageResize;
 use Web3\Web3;
@@ -17,34 +14,52 @@ use Web3\Utils;
 
 class IndexController extends AbstractActionController
 {
+  public function getUserMapper()
+  {
+    $sm = $this->getServiceLocator();
+    return $sm->get('UserMapper');
+  }
+
   public function getProjectMapper()
   {
     $sm = $this->getServiceLocator();
     return $sm->get('ProjectMapper');
   }
 
-  public function getProjectContributorMapper()
-  {
-    $sm = $this->getServiceLocator();
-    return $sm->get('ProjectContributorMapper');
-  }
-
-  public function getProjectSpendingRequestMapper()
-  {
-    $sm = $this->getServiceLocator();
-    return $sm->get('ProjectSpendingRequestMapper');
-  }
-
-  public function getProjectSpendingRequestVoteMapper()
-  {
-    $sm = $this->getServiceLocator();
-    return $sm->get('ProjectSpendingRequestVoteMapper');
-  }
-
   public function indexAction()
   {
-    return new ViewModel([
-    ]);
+    $route = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getMatchedRouteName();
+    $action = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getParam('action');
+
+    $page = $this->params()->fromRoute('page');
+    $search_by = $this->params()->fromRoute('search_by') ? $this->params()->fromRoute('search_by') : '';
+
+    $user = $this->getUserMapper()->getUser($this->identity()->id);
+    if(!$user){
+      $this->flashMessenger()->setNamespace('error')->addMessage('You need to login or register first.');
+      return $this->redirect()->toRoute('login');
+    }
+
+    $searchFilter = array();
+    if (!empty($search_by)) {
+      $searchFilter = (array) json_decode($search_by);
+    }
+    $searchFilter['created_user_id'] = $this->identity()->id;
+    $order = array('created_datetime DESC');
+
+    $paginator = $this->getProjectMapper()->fetch(true, $searchFilter, $order);
+    $paginator->setCurrentPageNumber($page);
+    $paginator->setItemCountPerPage(6);
+
+    return new ViewModel(array(
+      'user' => $user,
+      'paginator' => $paginator,
+      'search_by' => $search_by,
+      'page' => $page,
+      'searchFilter' => $searchFilter,
+      'route' => $route,
+      'action' => $action,
+    ));
   }
 
   public function createAction()
@@ -184,18 +199,17 @@ class IndexController extends AbstractActionController
     exit();
 */
     $form = $this->getServiceLocator()->get('ProjectForm');
-    $user = new ProjectEntity();
+    $project = new ProjectEntity();
+    $form->bind($project);
     if($this->getRequest()->isPost()) {
       $data = $this->params()->fromPost();
       $form->setData($data);
       if($form->isValid()) {
         $isError = false;
 
-        $data = $form->getData();
-
-        $name = $data['name'];
-        $description = $data['description'];
-        $minimum_contribution = $data['minimum_contribution'];
+        $name = $this->getRequest()->getPost('name');
+        $description = $this->getRequest()->getPost('description');
+        $minimum_contribution = $this->getRequest()->getPost('minimum_contribution');
 
         if(!isset($_FILES['photo'])){
           $isError = true;
@@ -229,10 +243,13 @@ class IndexController extends AbstractActionController
 		    }
 
         if(!$isError){
+          $authService = $this->serviceLocator->get('auth_service');
+
           $project = new ProjectEntity;
-          $project->setName($data['name']);
-          $project->setDescription($data['description']);
-          $project->setMinimumContribution($data['minimum_contribution']);
+          $project->setName($name);
+          $project->setDescription($description);
+          $project->setMinimumContribution($minimum_contribution);
+          $project->setCreatedUserId($authService->getIdentity()->id);
           $this->getProjectMapper()->save($project);
 
           $directory = $config['pathProjectPhoto']['absolutePath'] . $project->getId();
@@ -241,21 +258,34 @@ class IndexController extends AbstractActionController
           }
 
           $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-          $destination = $directory . "/photo-orig." . $ext;
+          $destination = $directory . "/photo_orig." . $ext;
           if(!file_exists($destination)){
              move_uploaded_file($_FILES['photo']['tmp_name'], $destination);
           }
-          $destination2 = $directory . "/photo-700x400." . $ext;
+          $destination2 = $directory . "/photo_crop_750x450." . $ext;
           if(file_exists($destination2)){
              unlink($destination2);
           }
           $image = new ImageResize($destination);
-          $image->resize(480, 320);
+          $image->crop(750, 450);
           $image->save($destination2);
+          if(file_exists($destination)){
+             unlink($destination);
+          }
+
+          $destination3 = $directory . "/photo_750x450." . $ext;
+          if(file_exists($destination3)){
+             unlink($destination3);
+          }
+          $image = new ImageResize($destination2);
+          $image->resize(750, 450, $allow_enlarge = True);
+          $image->save($destination3);
+          if(file_exists($destination2)){
+             unlink($destination2);
+          }
 
           $this->flashMessenger()->setNamespace('success')->addMessage('Project added successfully.');
-          // return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getId(),));
-          return $this->redirect()->toRoute('home');
+          return $this->redirect()->toRoute('project');
         }
       }
     }
@@ -390,92 +420,5 @@ class IndexController extends AbstractActionController
       'project' => $project,
       'form' => $form,
     ]);
-  }
-
-  public function voteYesAction()
-  {
-    $id = (int)$this->params('id');
-    if (!$id) {
-      return $this->redirect()->toRoute('home');
-    }
-    $projectSpendingRequest = $this->getProjectSpendingRequestMapper()->getProjectSpendingRequest($id);
-    if(!$projectSpendingRequest){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-    $project = $this->getProjectMapper()->getProject($projectSpendingRequest->getProjectId());
-    if(!$project){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-
-    $projectSpendingRequestVote = new ProjectSpendingRequestVoteEntity();
-    $projectSpendingRequestVote->setProjectSpendingRequestId($projectSpendingRequest->getId());
-    $projectSpendingRequestVote->setEosPublicAddress('EOS85kJTsjfgTDzuPyhYCLx4ZSR6wWfpfK1A3bEJNFhnp6eR5mkYn');
-    $projectSpendingRequestVote->setIsApproved('Y');
-    $this->getProjectSpendingRequestVoteMapper()->save($projectSpendingRequestVote);
-
-    $command = 'sudo cleos push action peos3 voteyes \'["peos"]\' -p bob@active';
-    exec($command, $output);
-
-    $this->flashMessenger()->setNamespace('success')->addMessage('Vote added successfully.');
-    return $this->redirect()->toRoute('project', array('action' => 'request', 'id' => $project->getId(),));
-  }
-
-  public function voteNoAction()
-  {
-    $id = (int)$this->params('id');
-    if (!$id) {
-      return $this->redirect()->toRoute('home');
-    }
-    $projectSpendingRequest = $this->getProjectSpendingRequestMapper()->getProjectSpendingRequest($id);
-    if(!$projectSpendingRequest){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-    $project = $this->getProjectMapper()->getProject($projectSpendingRequest->getProjectId());
-    if(!$project){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-
-    $projectSpendingRequestVote = new ProjectSpendingRequestVoteEntity();
-    $projectSpendingRequestVote->setProjectSpendingRequestId($projectSpendingRequest->getId());
-    $projectSpendingRequestVote->setEosPublicAddress('EOS85kJTsjfgTDzuPyhYCLx4ZSR6wWfpfK1A3bEJNFhnp6eR5mkYn');
-    $projectSpendingRequestVote->setIsApproved('N');
-    $this->getProjectSpendingRequestVoteMapper()->save($projectSpendingRequestVote);
-
-    $command = 'sudo cleos push action peos3 voteno \'["peos"]\' -p bob@active';
-    exec($command, $output);
-
-    $this->flashMessenger()->setNamespace('success')->addMessage('Vote added successfully.');
-    return $this->redirect()->toRoute('project', array('action' => 'request', 'id' => $project->getId(),));
-  }
-
-  public function finalizeAction()
-  {
-    $id = (int)$this->params('id');
-    if (!$id) {
-      return $this->redirect()->toRoute('home');
-    }
-    $projectSpendingRequest = $this->getProjectSpendingRequestMapper()->getProjectSpendingRequest($id);
-    if(!$projectSpendingRequest){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-    $project = $this->getProjectMapper()->getProject($projectSpendingRequest->getProjectId());
-    if(!$project){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-
-    $projectSpendingRequest->setIsFinalized('Y');
-    $this->getProjectSpendingRequestMapper()->save($projectSpendingRequest);
-
-    $command = 'sudo cleos push action peos3 finalize \'["peos"]\' -p bob@active';
-    exec($command, $output);
-
-    $this->flashMessenger()->setNamespace('success')->addMessage('Spending request finalize. Payment send to supplier.');
-    return $this->redirect()->toRoute('project', array('action' => 'request', 'id' => $project->getId(),));
   }
 }
