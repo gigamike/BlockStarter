@@ -128,9 +128,11 @@ class IndexController extends AbstractActionController
           $minimumContribution = $utils->toHex($ethToWei);
 
           $contractAddress = null;
+          $milestonesCount = 0;
+
           $web3 = new Web3($config['ethereum']['rpc']);
           $contract = new Contract($web3->provider, $abi);
-          $web3->eth->accounts(function ($err, $accounts) use ($contract, $bytecode, $fromAccount, $toAccount, $minimumContribution, &$contractAddress) {
+          $web3->eth->accounts(function ($err, $accounts) use ($contract, $bytecode, $fromAccount, $toAccount, $minimumContribution, &$contractAddress, &$milestonesCount) {
             // print_r($accounts);
             if ($err === null) {
               if (isset($accounts)) {
@@ -142,7 +144,7 @@ class IndexController extends AbstractActionController
             $contract->bytecode($bytecode)->new($minimumContribution, $fromAccount, [
                 'from' => $fromAccount,
                 'gas' => '0x200b20'
-              ], function ($err, $result) use ($contract, $fromAccount, $toAccount, &$contractAddress) {
+              ], function ($err, $result) use ($contract, $fromAccount, $toAccount, &$contractAddress, &$milestonesCount) {
                 // print_r($result);
                 if ($err !== null) {
                   throw $err;
@@ -151,7 +153,7 @@ class IndexController extends AbstractActionController
                   // echo "\nTransaction has made:) id: " . $result . "\n";
                 }
                 $transactionId = $result;
-                $contract->eth->getTransactionReceipt($transactionId, function ($err, $transaction) use ($contract, $fromAccount, $toAccount, &$contractAddress) {
+                $contract->eth->getTransactionReceipt($transactionId, function ($err, $transaction) use ($contract, $fromAccount, $toAccount, &$contractAddress, &$milestonesCount) {
                   if ($err !== null) {
                     throw $err;
                   }
@@ -159,6 +161,37 @@ class IndexController extends AbstractActionController
                     $contractAddress = $transaction->contractAddress;
                     // echo "\nContract Address: " . $contractAddress;
                     // echo "\nTransaction has mind:) block number: " . $transaction->blockNumber . "\n";
+
+                    $description = "Project Started.";
+                    $comments = "No Comments";
+                    $recipient = $fromAccount;
+                    $value = 0;
+                    $time = time();
+
+                    $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+                      'from' => $fromAccount,
+                      'gas' => '0x200b20'
+                    ], function($error, $result) use ($contract, $contractAddress, $fromAccount, &$milestonesCount){
+                      // print_r($error);
+                      // print_r($result);
+                      if ($error !== null) {
+                        throw $error;
+                      }
+                      if ($result) {
+                        // echo "\nTransaction has made:) id: " . $result . "\n";
+                      }
+
+                      $contract->at($contractAddress)->call('getMilestonesCount', ['from' => $fromAccount], function($error, $result) use (&$milestonesCount){
+                        // print_r($error);
+                        // print_r($result);
+                        if ($error !== null) {
+                          throw $error;
+                        }
+                        $milestonesCount = $result[0]->value;
+                        // echo $milestonesCount;
+                      });
+                    });
+
                   }
                 });
             });

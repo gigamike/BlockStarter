@@ -129,7 +129,12 @@
             )
         );
       ?>
-        <?php foreach ($paginator as $row): ?>
+        <?php foreach ($paginator as $row):
+            $projectAttributes = $this->getProjectAttributes($row->getContractAddress(), $this->user->getPublicAddress());
+            // echo "<pre>";
+            // print_r($projectAttributes);
+            // echo "</pre>"; exit();
+          ?>
           <article class="d-block card border-0 mb-7">
             <div class="card-body p-0">
               <div class="row">
@@ -151,18 +156,18 @@
                   <div class="row mb-1">
                     <div class="col-6">
                       <h4 class="small text-muted">
-                        Milestones: <strong class="text-secondary"> 0</strong>
+                        Milestones: <strong class="text-secondary"> <?php echo $projectAttributes['milestonesCount']; ?></strong>
                       </h4>
                       <div class="js-hr-progress progress" style="height: 6px;">
-                        <div class="js-hr-progress-bar progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="js-hr-progress-bar progress-bar bg-success" role="progressbar" style="width: <?php echo $projectAttributes['milestonesCount']; ?>%;" aria-valuenow="<?php echo $projectAttributes['milestonesCount']; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                     <div class="col-6">
                       <h4 class="small text-muted">
-                        Contributors: <strong class="text-secondary">0</strong>
+                        Contributors: <strong class="text-secondary"><?php echo $projectAttributes['contributorsCount']; ?></strong>
                       </h4>
                       <div class="js-hr-progress progress" style="height: 6px;">
-                        <div class="js-hr-progress-bar progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="js-hr-progress-bar progress-bar bg-warning" role="progressbar" style="width: <?php echo $projectAttributes['contributorsCount']; ?>%;" aria-valuenow="<?php echo $projectAttributes['contributorsCount']; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                   </div>
