@@ -134,15 +134,16 @@
             <div class="card-body p-0">
               <div class="row">
                 <div class="col-sm-5 mb-5 mb-sm-0">
-                  <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getId(),)); ?>"><img class="img-fluid w-100 rounded" src="/img/project/<?php echo $row->getId(); ?>/photo_480x320.jpg" alt="<?php echo $this->escapehtml($row->getName()); ?>"></a>
+                  <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getContractAddress(),)); ?>"><img class="img-fluid w-100 rounded" src="/img/project/<?php echo $row->getId(); ?>/photo_480x320.jpg" alt="<?php echo $this->escapehtml($row->getName()); ?>"></a>
                 </div>
                 <div class="col-sm-7">
                   <div class="pr-4">
                     <div>
                       <h2 class="h5">
-                        <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getId(),)); ?>"><?php echo $this->escapehtml($row->getName()); ?></a>
+                        <a href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getContractAddress(),)); ?>"><?php echo $this->escapehtml($row->getName()); ?></a>
                       </h2>
                       <p><?php echo $this->escapehtml($row->getDescription()); ?></p>
+                      <p>Minimum Contribution: ETH <?php echo $this->escapehtml($row->getMinimumContribution()); ?></p>
                     </div>
                     <small class="d-block text-secondary">Contract Address: <a class="text-dark font-weight-semi-bold" href="#"><?php echo $this->escapehtml($row->getContractAddress()); ?></a></small>
                   </div>
@@ -150,10 +151,10 @@
                   <div class="row mb-1">
                     <div class="col-6">
                       <h4 class="small text-muted">
-                        Goal: <strong class="text-secondary"> <?php echo $this->escapehtml($row->getMinimumContribution()); ?></strong>
+                        Milestones: <strong class="text-secondary"> 0</strong>
                       </h4>
                       <div class="js-hr-progress progress" style="height: 6px;">
-                        <div class="js-hr-progress-bar progress-bar bg-success" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="js-hr-progress-bar progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                     <div class="col-6">
@@ -161,11 +162,11 @@
                         Contributors: <strong class="text-secondary">0</strong>
                       </h4>
                       <div class="js-hr-progress progress" style="height: 6px;">
-                        <div class="js-hr-progress-bar progress-bar bg-warning" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="js-hr-progress-bar progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                       </div>
                     </div>
                   </div>
-                  <br><a class="btn btn-primary" href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getId(),)); ?>">View Project</a>
+                  <br><a class="btn btn-primary" href="<?php echo $this->url('project', array('action' => 'view', 'id' => $row->getContractAddress(),)); ?>">View Project</a>
 
                 </div>
               </div>
