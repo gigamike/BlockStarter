@@ -1,134 +1,136 @@
-<!-- Page Heading/Breadcrumbs -->
-<h1 class="mt-4 mb-3">Welcome
-  <small>
-    <?php if ($this->user->getRole() == 'doctor'): ?>
-      <?php if($this->user->getGender() == 'f'): ?>
-      Dra.
-    <?php else: ?>
-      Dr.
-    <?php endif; ?><?php endif; ?>
-    <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
-</h1>
+<div class="container space-top-md-2">
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Welcome
+    <small>
+      <?php if ($this->user->getRole() == 'doctor'): ?>
+        <?php if($this->user->getGender() == 'f'): ?>
+        Dra.
+      <?php else: ?>
+        Dr.
+      <?php endif; ?><?php endif; ?>
+      <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
+  </h1>
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="<?php echo $this->url('member'); ?>">Home</a>
-  </li>
-  <li class="breadcrumb-item active">Scan QR Code</li>
-</ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="<?php echo $this->url('member'); ?>">Home</a>
+    </li>
+    <li class="breadcrumb-item active">Scan QR Code</li>
+  </ol>
 
-<!-- Content Row -->
-<div class="row">
+  <!-- Content Row -->
+  <div class="row">
 
-    <!-- Sidebar Column -->
-    <div class="col-lg-3 mb-4">
-      <?php echo $this->partial('partial/member/menu.phtml', array(
-          'route' => $this->route,
-          'action' => $this->action,
-      )); ?>
-    </div>
-  <!-- Content Column -->
-  <div class="col-lg-9 mb-4">
-    <h2>Scan QR Code</h2>
-    <?php
-    $flash = $this->flashMessenger();
-    $flash->setMessageOpenFormat('<div%s role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        ')
-        ->setMessageSeparatorString('')
-        ->setMessageCloseString('</div>');
-
-    echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
-    echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
-    echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
-    echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
-     ?>
-
-     <form method="get" action="<?php echo $this->url('member', array('action' => 'create',)); ?>">
-      <div class="form-row">
-        <div class="col-8">
-          <input name="public_address" type="text" class="form-control" id="public_address" placeholder="Public Address">
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </div>
+      <!-- Sidebar Column -->
+      <div class="col-lg-3 mb-4">
+        <?php echo $this->partial('partial/member/menu.phtml', array(
+            'route' => $this->route,
+            'action' => $this->action,
+        )); ?>
       </div>
-    </form>
-    <br>
+    <!-- Content Column -->
+    <div class="col-lg-9 mb-4">
+      <h2>Scan QR Code</h2>
+      <?php
+      $flash = $this->flashMessenger();
+      $flash->setMessageOpenFormat('<div%s role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+          ')
+          ->setMessageSeparatorString('')
+          ->setMessageCloseString('</div>');
 
-     <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
-     <canvas id="canvas" hidden></canvas>
-     <div id="output" hidden>
-     <div id="outputMessage">No QR code detected.</div>
-     <div hidden><b>Data:</b> <span id="outputData"></span></div>
-     </div>
+      echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+      echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+      echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+      echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+       ?>
 
-     <script src="/vendor/jsQR-master/dist/jsQR.js"></script>
-     <script>
-     var video = document.createElement("video");
-     var canvasElement = document.getElementById("canvas");
-     var canvas = canvasElement.getContext("2d");
-     var loadingMessage = document.getElementById("loadingMessage");
-     var outputContainer = document.getElementById("output");
-     var outputMessage = document.getElementById("outputMessage");
-     var outputData = document.getElementById("outputData");
+       <form method="get" action="<?php echo $this->url('member', array('action' => 'create',)); ?>">
+        <div class="form-row">
+          <div class="col-8">
+            <input name="public_address" type="text" class="form-control" id="public_address" placeholder="Public Address">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+          </div>
+        </div>
+      </form>
+      <br>
 
-     function drawLine(begin, end, color) {
-       canvas.beginPath();
-       canvas.moveTo(begin.x, begin.y);
-       canvas.lineTo(end.x, end.y);
-       canvas.lineWidth = 4;
-       canvas.strokeStyle = color;
-       canvas.stroke();
-     }
+       <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
+       <canvas id="canvas" hidden></canvas>
+       <div id="output" hidden>
+       <div id="outputMessage">No QR code detected.</div>
+       <div hidden><b>Data:</b> <span id="outputData"></span></div>
+       </div>
 
-     // Use facingMode: environment to attemt to get the front camera on phones
-     navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
-       video.srcObject = stream;
-       video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
-       video.play();
-       requestAnimationFrame(tick);
-     });
+       <script src="/vendor/jsQR-master/dist/jsQR.js"></script>
+       <script>
+       var video = document.createElement("video");
+       var canvasElement = document.getElementById("canvas");
+       var canvas = canvasElement.getContext("2d");
+       var loadingMessage = document.getElementById("loadingMessage");
+       var outputContainer = document.getElementById("output");
+       var outputMessage = document.getElementById("outputMessage");
+       var outputData = document.getElementById("outputData");
 
-     function tick() {
-       loadingMessage.innerText = "⌛ Loading video..."
-       if (video.readyState === video.HAVE_ENOUGH_DATA) {
-         loadingMessage.hidden = true;
-         canvasElement.hidden = false;
-         outputContainer.hidden = false;
-
-         canvasElement.height = video.videoHeight;
-         canvasElement.width = video.videoWidth;
-         canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-         var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
-         var code = jsQR(imageData.data, imageData.width, imageData.height, {
-           inversionAttempts: "dontInvert",
-         });
-         if (code) {
-           alert("Public Address: " + code.data);
-           document.getElementById("public_address").value = code.data;
-           drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
-           drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
-           drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
-           drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
-           outputMessage.hidden = true;
-           outputData.parentElement.hidden = false;
-           outputData.innerText = code.data;
-         } else {
-           outputMessage.hidden = false;
-           outputData.parentElement.hidden = true;
-         }
+       function drawLine(begin, end, color) {
+         canvas.beginPath();
+         canvas.moveTo(begin.x, begin.y);
+         canvas.lineTo(end.x, end.y);
+         canvas.lineWidth = 4;
+         canvas.strokeStyle = color;
+         canvas.stroke();
        }
-       requestAnimationFrame(tick);
-     }
-     </script>
+
+       // Use facingMode: environment to attemt to get the front camera on phones
+       navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function(stream) {
+         video.srcObject = stream;
+         video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+         video.play();
+         requestAnimationFrame(tick);
+       });
+
+       function tick() {
+         loadingMessage.innerText = "⌛ Loading video..."
+         if (video.readyState === video.HAVE_ENOUGH_DATA) {
+           loadingMessage.hidden = true;
+           canvasElement.hidden = false;
+           outputContainer.hidden = false;
+
+           canvasElement.height = video.videoHeight;
+           canvasElement.width = video.videoWidth;
+           canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+           var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+           var code = jsQR(imageData.data, imageData.width, imageData.height, {
+             inversionAttempts: "dontInvert",
+           });
+           if (code) {
+             alert("Public Address: " + code.data);
+             document.getElementById("public_address").value = code.data;
+             drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+             drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+             drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+             drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+             outputMessage.hidden = true;
+             outputData.parentElement.hidden = false;
+             outputData.innerText = code.data;
+           } else {
+             outputMessage.hidden = false;
+             outputData.parentElement.hidden = true;
+           }
+         }
+         requestAnimationFrame(tick);
+       }
+       </script>
 
 
+    </div>
+    <!-- /.container-fluid -->
+
+    </div>
   </div>
-  <!-- /.container-fluid -->
-
-  </div>
+  <!-- /.row -->
 </div>
-<!-- /.row -->

@@ -1,76 +1,78 @@
-<!-- Page Heading/Breadcrumbs -->
-<h1 class="mt-4 mb-3">Welcome
-  <small>
-    <?php if ($this->user->getRole() == 'doctor'): ?>
-      <?php if($this->user->getGender() == 'f'): ?>
-      Dra.
-    <?php else: ?>
-      Dr.
-    <?php endif; ?><?php endif; ?>
-    <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
-</h1>
+<div class="container space-top-md-2">
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Welcome
+    <small>
+      <?php if ($this->user->getRole() == 'doctor'): ?>
+        <?php if($this->user->getGender() == 'f'): ?>
+        Dra.
+      <?php else: ?>
+        Dr.
+      <?php endif; ?><?php endif; ?>
+      <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></small>
+  </h1>
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="<?php echo $this->url('member'); ?>">Home</a>
-  </li>
-  <li class="breadcrumb-item active">My Profile</li>
-</ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="<?php echo $this->url('member'); ?>">Home</a>
+    </li>
+    <li class="breadcrumb-item active">My Profile</li>
+  </ol>
 
-<!-- Content Row -->
-<div class="row">
-  <?php
-  $flash = $this->flashMessenger();
-  $flash->setMessageOpenFormat('<div%s role="alert">
-      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-      </button>
-      ')
-      ->setMessageSeparatorString('')
-      ->setMessageCloseString('</div>');
+  <!-- Content Row -->
+  <div class="row">
+    <?php
+    $flash = $this->flashMessenger();
+    $flash->setMessageOpenFormat('<div%s role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        ')
+        ->setMessageSeparatorString('')
+        ->setMessageCloseString('</div>');
 
-  echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
-  echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
-  echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
-  echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
-   ?>
+    echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+    echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+    echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+    echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+     ?>
 
-    <!-- Sidebar Column -->
-    <div class="col-lg-3 mb-4">
-      <?php echo $this->partial('partial/member/menu.phtml', array(
-          'route' => $this->route,
-          'action' => $this->action,
-      )); ?>
-    </div>
-  <!-- Content Column -->
-  <div class="col-lg-9 mb-4">
-    <h2>My Profile</h2>
+      <!-- Sidebar Column -->
+      <div class="col-lg-3 mb-4">
+        <?php echo $this->partial('partial/member/menu.phtml', array(
+            'route' => $this->route,
+            'action' => $this->action,
+        )); ?>
+      </div>
+    <!-- Content Column -->
+    <div class="col-lg-9 mb-4">
+      <h2>My Profile</h2>
 
-    <?php if ($user = $this->identity()): ?>
-      <?php if ($user->role == 'patient'): ?>
-    <p><strong>Name: </strong><?php echo $this->escapehtml($this->user->getFirstName()); ?> <?php echo $this->escapehtml($this->user->getLastName()); ?> (<?php echo $this->escapehtml($this->user->getTitle()); ?>)</p>
-    <p><strong>Birth Date: </strong><?php echo date('M d, Y', strtotime($this->escapehtml($this->user->getBirthDate()))); ?> (Age: <?php echo $this->getAge($this->escapehtml($this->user->getBirthDate())); ?>)</p>
+      <?php if ($user = $this->identity()): ?>
+        <?php if ($user->role == 'patient'): ?>
+      <p><strong>Name: </strong><?php echo $this->escapehtml($this->user->getFirstName()); ?> <?php echo $this->escapehtml($this->user->getLastName()); ?> (<?php echo $this->escapehtml($this->user->getTitle()); ?>)</p>
+      <p><strong>Birth Date: </strong><?php echo date('M d, Y', strtotime($this->escapehtml($this->user->getBirthDate()))); ?> (Age: <?php echo $this->getAge($this->escapehtml($this->user->getBirthDate())); ?>)</p>
+        <?php endif; ?>
+
+        <?php if ($user->role == 'doctor'): ?>
+      <p><strong>Name: </strong><?php if($this->user->getGender() == 'f'): ?>
+        Dra.
+      <?php else: ?>
+        Dr.
+      <?php endif; ?><?php echo $this->escapehtml($this->user->getFirstName()); ?> <?php echo $this->escapehtml($this->user->getLastName()); ?> (<?php echo $this->escapehtml($this->user->getTitle()); ?>)</p>
+
+        <?php endif; ?>
       <?php endif; ?>
 
-      <?php if ($user->role == 'doctor'): ?>
-    <p><strong>Name: </strong><?php if($this->user->getGender() == 'f'): ?>
-      Dra.
-    <?php else: ?>
-      Dr.
-    <?php endif; ?><?php echo $this->escapehtml($this->user->getFirstName()); ?> <?php echo $this->escapehtml($this->user->getLastName()); ?> (<?php echo $this->escapehtml($this->user->getTitle()); ?>)</p>
+      <p><strong>Location: </strong><?php echo $this->escapehtml($this->user->getCity()); ?>, <?php echo $this->escapehtml($this->getCountry($this->user->getCountryId())); ?></p>
+      <p><strong>Public Address: </strong> <?php echo $this->escapehtml($this->user->getPublicAddress()); ?></p>
+      <div>
+        <img class="img-fluid" src="<?php echo $this->getQRCode($this->user->getPublicAddress(), 500, 500); ?>">
+      </div>
 
-      <?php endif; ?>
-    <?php endif; ?>
-
-    <p><strong>Location: </strong><?php echo $this->escapehtml($this->user->getCity()); ?>, <?php echo $this->escapehtml($this->getCountry($this->user->getCountryId())); ?></p>
-    <p><strong>Public Address: </strong> <?php echo $this->escapehtml($this->user->getPublicAddress()); ?></p>
-    <div>
-      <img class="img-fluid" src="<?php echo $this->getQRCode($this->user->getPublicAddress(), 500, 500); ?>">
     </div>
+    <!-- /.container-fluid -->
 
+    </div>
   </div>
-  <!-- /.container-fluid -->
-
-  </div>
+  <!-- /.row -->
 </div>
-<!-- /.row -->

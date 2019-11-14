@@ -194,23 +194,23 @@ class RegistrationController extends AbstractActionController
                 if(!file_exists($destination)){
                    move_uploaded_file($_FILES['company_photo']['tmp_name'], $destination);
                 }
-                $destination2 = $directory . "/company_photo_crop_750x450." . $ext;
+                $destination2 = $directory . "/company_photo_crop_480x320." . $ext;
                 if(file_exists($destination2)){
                    unlink($destination2);
                 }
                 $image = new ImageResize($destination);
-                $image->crop(750, 450);
+                $image->crop(480, 320);
                 $image->save($destination2);
                 if(file_exists($destination)){
                    unlink($destination);
                 }
 
-                $destination3 = $directory . "/company_photo_750x450." . $ext;
+                $destination3 = $directory . "/company_photo_480x320." . $ext;
                 if(file_exists($destination3)){
                    unlink($destination3);
                 }
                 $image = new ImageResize($destination2);
-                $image->resize(750, 450, $allow_enlarge = True);
+                $image->resize(480, 320, $allow_enlarge = True);
                 $image->save($destination3);
                 if(file_exists($destination2)){
                    unlink($destination2);
@@ -222,23 +222,23 @@ class RegistrationController extends AbstractActionController
                 if(!file_exists($destination)){
                    move_uploaded_file($_FILES['mayors_permit']['tmp_name'], $destination);
                 }
-                $destination2 = $directory . "/mayors_permit_crop_750x450." . $ext;
+                $destination2 = $directory . "/mayors_permit_crop_480x320." . $ext;
                 if(file_exists($destination2)){
                    unlink($destination2);
                 }
                 $image = new ImageResize($destination);
-                $image->crop(750, 450);
+                $image->crop(480, 320);
                 $image->save($destination2);
                 if(file_exists($destination)){
                    unlink($destination);
                 }
 
-                $destination3 = $directory . "/mayors_permit_750x450." . $ext;
+                $destination3 = $directory . "/mayors_permit_480x320." . $ext;
                 if(file_exists($destination3)){
                    unlink($destination3);
                 }
                 $image = new ImageResize($destination2);
-                $image->resize(750, 450, $allow_enlarge = True);
+                $image->resize(480, 320, $allow_enlarge = True);
                 $image->save($destination3);
                 if(file_exists($destination2)){
                    unlink($destination2);
@@ -250,23 +250,23 @@ class RegistrationController extends AbstractActionController
                 if(!file_exists($destination)){
                    move_uploaded_file($_FILES['bir_certificate']['tmp_name'], $destination);
                 }
-                $destination2 = $directory . "/bir_certificate_crop_750x450." . $ext;
+                $destination2 = $directory . "/bir_certificate_crop_480x320." . $ext;
                 if(file_exists($destination2)){
                    unlink($destination2);
                 }
                 $image = new ImageResize($destination);
-                $image->crop(750, 450);
+                $image->crop(480, 320);
                 $image->save($destination2);
                 if(file_exists($destination)){
                    unlink($destination);
                 }
 
-                $destination3 = $directory . "/bir_certificate_750x450." . $ext;
+                $destination3 = $directory . "/bir_certificate_480x320." . $ext;
                 if(file_exists($destination3)){
                    unlink($destination3);
                 }
                 $image = new ImageResize($destination2);
-                $image->resize(750, 450, $allow_enlarge = True);
+                $image->resize(480, 320, $allow_enlarge = True);
                 $image->save($destination3);
                 if(file_exists($destination2)){
                    unlink($destination2);

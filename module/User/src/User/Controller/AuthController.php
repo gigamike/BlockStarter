@@ -21,7 +21,7 @@ class AuthController extends AbstractActionController
       if($authService->getIdentity()->role == 'admin'){
         return $this->redirect()->toRoute('admin');
       }else if($authService->getIdentity()->role == 'member'){
-        return $this->redirect()->toRoute('member');
+        return $this->redirect()->toRoute('home');
       }else if($authService->getIdentity()->role == 'supplier'){
         return $this->redirect()->toRoute('supplier');
       }else{
@@ -85,7 +85,7 @@ class AuthController extends AbstractActionController
             if($authService->getIdentity()->role == 'admin'){
               return $this->redirect()->toRoute('admin');
             }else if($authService->getIdentity()->role == 'member'){
-              return $this->redirect()->toRoute('member');
+              return $this->redirect()->toRoute('home');
             }else if($authService->getIdentity()->role == 'supplier'){
               return $this->redirect()->toRoute('supplier');
             }else{

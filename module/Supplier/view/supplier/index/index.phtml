@@ -1,59 +1,61 @@
-<!-- Page Heading/Breadcrumbs -->
-<h1 class="mt-4 mb-3">Suppliers
-</h1>
+<div class="container space-top-md-2">
+  <!-- Page Heading/Breadcrumbs -->
+  <h1 class="mt-4 mb-3">Suppliers
+  </h1>
 
-<ol class="breadcrumb">
-  <li class="breadcrumb-item">
-    <a href="<?php echo $this->url('home'); ?>">Home</a>
-  </li>
-  <li class="breadcrumb-item active">Suppliers</li>
-</ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="<?php echo $this->url('home'); ?>">Home</a>
+    </li>
+    <li class="breadcrumb-item active">Suppliers</li>
+  </ol>
 
-<h2>Our Supppliers</h2>
+  <h2>Our Supppliers</h2>
 
-<div class="row mb-4">
-  <div class="col-md-8">
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.</p>
-  </div>
-  <div class="col-md-4">
-    <a class="btn btn-lg btn-secondary btn-block" href="<?php echo $this->url('registration'); ?>">Register As Supplier</a>
-  </div>
-</div>
-
-<?php
-        echo $this->paginationControl(
-            $this->paginator,
-            'sliding',
-            "partial/home/paginator.phtml",
-            array(
-                'route' => 'product',
-            'search_by' => $this->search_by,
-            )
-        );
-      ?>
-
-<div class="row">
-  <?php foreach ($paginator as $row): ?>
-  <div class="col-lg-4 mb-4">
-    <div class="card h-100 text-center">
-      <img class="card-img-top" src="/img/supplier/<?php echo $row->getId(); ?>/company_photo_750x450.jpg" alt="">
-      <div class="card-body">
-        <h4 class="card-title"><?php echo $row->getName(); ?></h4>
-        <p class="card-text"><?php echo $row->getDescription(); ?></p>
-      </div>
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias, expedita, saepe, vero rerum deleniti beatae veniam harum neque nemo praesentium cum alias asperiores commodi.</p>
+    </div>
+    <div class="col-md-4">
+      <a class="btn btn-lg btn-secondary btn-block" href="<?php echo $this->url('registration'); ?>">Register As Supplier</a>
     </div>
   </div>
-  <?php endforeach; ?>
-</div>
 
-<?php
-        echo $this->paginationControl(
-            $this->paginator,
-            'sliding',
-            "partial/home/paginator.phtml",
-            array(
-                'route' => 'product',
-            'search_by' => $this->search_by,
-            )
-        );
-      ?>
+  <?php
+          echo $this->paginationControl(
+              $this->paginator,
+              'sliding',
+              "partial/home/paginator.phtml",
+              array(
+                  'route' => 'product',
+              'search_by' => $this->search_by,
+              )
+          );
+        ?>
+
+  <div class="row">
+    <?php foreach ($paginator as $row): ?>
+    <div class="col-lg-4 mb-4">
+      <div class="card h-100 text-center">
+        <img class="card-img-top" src="/img/supplier/<?php echo $row->getId(); ?>/company_photo_750x450.jpg" alt="">
+        <div class="card-body">
+          <h4 class="card-title"><?php echo $row->getName(); ?></h4>
+          <p class="card-text"><?php echo $row->getDescription(); ?></p>
+        </div>
+      </div>
+    </div>
+    <?php endforeach; ?>
+  </div>
+
+  <?php
+          echo $this->paginationControl(
+              $this->paginator,
+              'sliding',
+              "partial/home/paginator.phtml",
+              array(
+                  'route' => 'product',
+              'search_by' => $this->search_by,
+              )
+          );
+        ?>
+</div>
