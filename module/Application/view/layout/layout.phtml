@@ -6,28 +6,185 @@
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')
         ?>
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
-                        ->prependStylesheet($this->basePath() . '/css/style.css')
-                        ->prependStylesheet($this->basePath() . '/css/modern-business.css')
-                        ->prependStylesheet($this->basePath() . '/vendor/fontawesome-free/css/all.min.css')
-                        ->prependStylesheet($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.css')
-                        ->prependStylesheet($this->basePath() . '/vendor/bootstrap/css/bootstrap.min.css') ?>
-        <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.js')
-            ->prependFile($this->basePath() . '/vendor/bootstrap/js/bootstrap.bundle.min.js')
-            ->prependFile($this->basePath() . '/vendor/jquery/jquery.min.js')
-        ; ?>
+        <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+            ->prependStylesheet($this->basePath('css/style.css'))
+            ->prependStylesheet($this->basePath('/assets/css/theme.css'))
+            ->prependStylesheet($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.css')
+            ->prependStylesheet($this->basePath('/assets/vendor/slick-carousel/slick/slick.css'))
+            ->prependStylesheet($this->basePath('/assets/vendor/hs-megamenu/src/hs.megamenu.css'))
+            ->prependStylesheet($this->basePath('/assets/vendor/animate.css/animate.min.css'))
+            ->prependStylesheet($this->basePath('/assets/vendor/font-awesome/css/fontawesome-all.min.css'))
+            ->prependStylesheet('//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700')
+        ?>
+        <?= $this->headScript()
+          ->prependFile($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.js')
+            ->prependFile($this->basePath('/assets/js/components/hs.go-to.js'))
+            ->prependFile($this->basePath('/assets/js/components/hs.slick-carousel.js'))
+            ->prependFile($this->basePath('/assets/js/components/hs.validation.js'))
+            ->prependFile($this->basePath('/assets/js/components/hs.svg-injector.js'))
+            ->prependFile($this->basePath('/assets/js/components/hs.unfold.js'))
+            ->prependFile($this->basePath('/assets/js/components/hs.header.js'))
+            ->prependFile($this->basePath('/assets/js/hs.core.js'))
+            ->prependFile($this->basePath('/assets/vendor/slick-carousel/slick/slick.js'))
+            ->prependFile($this->basePath('/assets/vendor/slick-carousel/slick/slick.js'))
+            ->prependFile($this->basePath('/assets/vendor/jquery-validation/dist/jquery.validate.min.js'))
+            ->prependFile($this->basePath('/assets/vendor/svg-injector/dist/svg-injector.min.js'))
+            ->prependFile($this->basePath('/assets/vendor/hs-megamenu/src/hs.megamenu.js'))
+            ->prependFile($this->basePath('/assets/vendor/bootstrap/bootstrap.min.js'))
+            ->prependFile($this->basePath('/assets/vendor/popper.js/dist/umd/popper.min.js'))
+            ->prependFile($this->basePath('/assets/vendor/jquery-migrate/dist/jquery-migrate.min.js'))
+            ->prependFile($this->basePath('/assets/vendor/jquery/dist/jquery.min.js'))
+        ?>
     </head>
     <body>
-      <!-- Navigation -->
-      <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-          <a class="navbar-brand" href="<?php echo $this->url('home'); ?>">BlockStarter</a>
-          <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+      <!-- Search Content -->
+      <div id="searchSlideDown" class="dropdown-unfold u-search-slide-down" aria-labelledby="searchSlideDownInvoker">
+        <form>
+          <!-- Input Group -->
+          <div class="input-group input-group-borderless u-search-slide-down__input rounded mb-2">
+            <div class="input-group-prepend">
+              <span class="input-group-text">
+                <span class="fas fa-search"></span>
+              </span>
+            </div>
+            <input type="search" class="form-control" placeholder="Search Front" aria-label="Search Front">
+            <div class="input-group-append">
+              <a class="input-group-text" href="javascript:;"
+                 aria-label="close"
+                 data-unfold-event="click"
+                 data-unfold-hide-on-scroll="false"
+                 data-unfold-target="#searchSlideDown"
+                 data-unfold-type="css-animation"
+                 data-unfold-animation-in="active"
+                 data-unfold-animation-out="fadeOutUp"
+                 data-unfold-delay="0"
+                 data-unfold-duration="800"
+                 data-unfold-overlay='{
+                  "className": "u-search-slide-down-bg-overlay",
+                  "background": "rgba(55, 125, 255, .1)",
+                  "animationSpeed": 400
+                 }'>
+                <span class="fas fa-times" aria-hidden="true"></span>
+              </a>
+            </div>
+          </div>
+          <!-- End Input Group -->
+
+          <!-- Suggestions Content -->
+          <div class="rounded bg-white u-search-slide-down__suggestions py-3 px-5">
+            <ul class="list-group list-group-flush list-group-borderless mb-0">
+              <li><a class="list-group-item list-group-item-action" href="#">About Front</a></li>
+              <li><a class="list-group-item list-group-item-action" href="#">Getting Started</a></li>
+              <li><a class="list-group-item list-group-item-action" href="#">Documentation</a></li>
+            </ul>
+          </div>
+          <!-- End Suggestions Content -->
+        </form>
+      </div>
+      <!-- End Search Content -->
+
+      <!-- ========== HEADER ========== -->
+  <header id="header" class="u-header u-header--abs-top-md u-header--bg-transparent u-header--show-hide-md"
+          data-header-fix-moment="500"
+          data-header-fix-effect="slide">
+    <div class="u-header__section">
+      <!-- Topbar -->
+      <div class="container u-header__hide-content pt-2">
+        <div class="d-flex align-items-center">
+          <div class="ml-auto">
+            <!-- Jump To -->
+            <div class="d-inline-block d-sm-none position-relative mr-2">
+              <a id="jumpToDropdownInvoker" class="dropdown-nav-link dropdown-toggle d-flex align-items-center" href="javascript:;" role="button"
+                 aria-controls="jumpToDropdown"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 data-unfold-event="hover"
+                 data-unfold-target="#jumpToDropdown"
+                 data-unfold-type="css-animation"
+                 data-unfold-duration="300"
+                 data-unfold-delay="300"
+                 data-unfold-hide-on-scroll="true"
+                 data-unfold-animation-in="slideInUp"
+                 data-unfold-animation-out="fadeOut">
+                Jump to
+              </a>
+
+              <div id="jumpToDropdown" class="dropdown-menu dropdown-unfold" aria-labelledby="jumpToDropdownInvoker">
+                <a class="dropdown-item" href="#">Help</a>
+                <a class="dropdown-item" href="#">Contacts</a>
+              </div>
+            </div>
+            <!-- End Jump To -->
+
+            <!-- Links -->
+            <div class="d-none d-sm-inline-block ml-sm-auto">
+              <ul class="list-inline mb-0">
+                <li class="list-inline-item mr-0">
+                  <a class="u-header__navbar-link" href="#">Help</a>
+                </li>
+                <li class="list-inline-item mr-0">
+                  <a class="u-header__navbar-link" href="#">Contacts</a>
+                </li>
+              </ul>
+            </div>
+            <!-- End Links -->
+          </div>
+
+          <ul class="list-inline ml-2 mb-0">
+            <!-- Search -->
+            <li class="list-inline-item">
+              <a id="searchSlideDownInvoker" class="btn btn-xs btn-icon btn-text-secondary u-search-slide-down-trigger" href="javascript:;" role="button"
+                 aria-haspopup="true"
+                 aria-expanded="false"
+                 aria-controls="searchSlideDown"
+                 data-unfold-type="css-animation"
+                 data-unfold-hide-on-scroll="false"
+                 data-unfold-target="#searchSlideDown"
+                 data-unfold-animation-in="active"
+                 data-unfold-animation-out="fadeOutUp"
+                 data-unfold-delay="0"
+                 data-unfold-duration="800"
+                 data-unfold-overlay='{
+                  "className": "u-search-slide-down-bg-overlay",
+                  "background": "rgba(55, 125, 255, .1)",
+                  "animationSpeed": 400
+                 }'>
+                <span class="fas fa-search btn-icon__inner u-search-slide-down-trigger__icon"></span>
+              </a>
+            </li>
+            <!-- End Search -->
+          </ul>
+        </div>
+      </div>
+      <!-- End Topbar -->
+
+      <div id="logoAndNav" class="container">
+        <!-- Nav -->
+        <nav class="js-mega-menu navbar navbar-expand-md u-header__navbar u-header__navbar--no-space">
+          <!-- Logo -->
+          <a class="navbar-brand u-header__navbar-brand u-header__navbar-brand-center" href="<?php echo $this->url('home'); ?>" aria-label="Front">
+            <span class="u-header__navbar-brand-text">BlockStarter</span>
+          </a>
+          <!-- End Logo -->
+
+          <!-- Responsive Toggle Button -->
+          <button type="button" class="navbar-toggler btn u-hamburger"
+                  aria-label="Toggle navigation"
+                  aria-expanded="false"
+                  aria-controls="navBar"
+                  data-toggle="collapse"
+                  data-target="#navBar">
+            <span id="hamburgerTrigger" class="u-hamburger__box">
+              <span class="u-hamburger__inner"></span>
+            </span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+          <!-- End Responsive Toggle Button -->
+
+          <!-- Navigation -->
+          <div id="navBar" class="collapse navbar-collapse u-header__navbar-collapse">
+            <ul class="navbar-nav u-header__navbar-nav">
+
+
               <?php if ($user = $this->identity()): ?>
                 <?php if ($user->role == 'member'): ?>
                   <li class="nav-item">
@@ -69,22 +226,89 @@
               </li>
             </ul>
           </div>
-        </div>
-      </nav>
-
-
-      <!-- Page Content -->
-      <div class="container">
-            <?php echo $this->content; ?>
+          <!-- End Navigation -->
+        </nav>
+        <!-- End Nav -->
       </div>
-      <!-- /.container -->
-      <!-- Footer -->
-      <footer class="py-5 bg-dark">
-        <div class="container">
-          <p class="m-0 text-center text-white">Copyright &copy; BlockStarter 2019</p>
-        </div>
-        <!-- /.container -->
-      </footer>
+    </div>
+  </header>
+  <!-- ========== END HEADER ========== -->
+  <!-- ========== MAIN CONTENT ========== -->
+    <main id="content" role="main">
+            <?php echo $this->content; ?>
+          </main>
+        <!-- ========== END MAIN CONTENT ========== -->
+
+                <!-- ========== FOOTER ========== -->
+                  <footer class="container text-center space-top-md-1 space-bottom-1">
+                    <a href="<?php echo $this->url('privacy-policy'); ?>">Privacy Policy</a> | <a href="<?php echo $this->url('terms-of-use'); ?>">Terms and Conditions</a><br>
+                    <!-- Logo -->
+                    <a class="d-inline-flex align-items-center mb-2" href="<?php echo $this->url('home'); ?>" aria-label="Front">
+
+                      <span class="brand brand-primary">BlockStarter</span>
+                    </a>
+                    <!-- End Logo -->
+
+                    <p class="small text-muted mb-0">2019 Gigamike.net All rights reserved.</p>
+                  </footer>
+                  <!-- ========== END FOOTER ========== -->
+
+                  <!-- Go to Top -->
+                  <a class="js-go-to u-go-to" href="#"
+                    data-position='{"bottom": 15, "right": 15 }'
+                    data-type="fixed"
+                    data-offset-top="400"
+                    data-compensation="#header"
+                    data-show-effect="slideInUp"
+                    data-hide-effect="slideOutDown">
+                    <span class="fas fa-arrow-up u-go-to__inner"></span>
+                  </a>
+                  <!-- End Go to Top -->
+
+            <script>
+              $(window).on('load', function () {
+                // initialization of HSMegaMenu component
+                $('.js-mega-menu').HSMegaMenu({
+                  event: 'hover',
+                  pageContainer: $('.container'),
+                  breakpoint: 767.98,
+                  hideTimeOut: 0
+                });
+
+                // initialization of svg injector module
+                $.HSCore.components.HSSVGIngector.init('.js-svg-injector');
+              });
+
+              $(document).on('ready', function () {
+                // initialization of header
+                $.HSCore.components.HSHeader.init($('#header'));
+
+                // initialization of unfold component
+                $.HSCore.components.HSUnfold.init($('[data-unfold-target]'), {
+                  afterOpen: function () {
+                    $(this).find('input[type="search"]').focus();
+                  }
+                });
+
+                // initialization of form validation
+                $.HSCore.components.HSValidation.init('.js-validate', {
+                  rules: {
+                    confirmPassword: {
+                      equalTo: '#signupPassword'
+                    }
+                  }
+                });
+
+                // initialization of slick carousel
+                $.HSCore.components.HSSlickCarousel.init('.js-slick-carousel');
+
+                // initialization of go to
+                $.HSCore.components.HSGoTo.init('.js-go-to');
+              });
+            </script>
+
+            <?= $this->inlineScript() ?>
+        </body>
         <?php echo $this->inlineScript() ?>
     </body>
 </html>

@@ -20,6 +20,46 @@ return array(
                     ),
                 ),
             ),
+            'terms-of-use' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/terms-of-use',
+                    'defaults' => array(
+                        'controller' => 'Page\Controller\Index',
+                        'action'     => 'termsOfUse',
+                    ),
+                ),
+            ),
+            'privacy-policy' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/privacy-policy',
+                    'defaults' => array(
+                        'controller' => 'Page\Controller\Index',
+                        'action'     => 'privacyPolicy',
+                    ),
+                ),
+            ),
+            'about' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/about',
+                    'defaults' => array(
+                        'controller' => 'Page\Controller\Index',
+                        'action'     => 'about',
+                    ),
+                ),
+            ),
+            'contact' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/contact',
+                    'defaults' => array(
+                        'controller' => 'Contact\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'registration' => array(
                 'type' => 'segment',
                 'options' => array(
