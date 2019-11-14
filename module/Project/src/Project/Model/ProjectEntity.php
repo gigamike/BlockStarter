@@ -7,7 +7,7 @@ class ProjectEntity
 	protected $name;
 	protected $description;
 	protected $minimum_contribution;
-	protected $public_address;
+	protected $contract_address;
 	protected $created_datetime;
 	protected $created_user_id;
 
@@ -56,14 +56,14 @@ class ProjectEntity
 		$this->minimum_contribution = $value;
 	}
 
-	public function getPublicAddress()
+	public function getContractAddress()
 	{
-		return $this->public_address;
+		return $this->contract_address;
 	}
 
-	public function setPublicAddress($value)
+	public function setContractAddress($value)
 	{
-		$this->public_address = $value;
+		$this->contract_address = $value;
 	}
 
 	public function getCreatedDatetime()

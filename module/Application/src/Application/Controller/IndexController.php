@@ -20,6 +20,12 @@ class IndexController extends AbstractActionController
       return $sm->get('ProjectMapper');
     }
 
+    public function getUserMapper()
+    {
+      $sm = $this->getServiceLocator();
+      return $sm->get('UserMapper');
+    }
+
     public function indexAction()
     {
       $route = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getMatchedRouteName();
@@ -36,12 +42,21 @@ class IndexController extends AbstractActionController
       $paginator->setCurrentPageNumber($page);
       $paginator->setItemCountPerPage(6);
 
+      if ($user = $this->identity()) {
+        $user = $this->getUserMapper()->getUser($this->identity()->id);
+        if(!$user){
+          $this->flashMessenger()->setNamespace('error')->addMessage('You need to login or register first.');
+          return $this->redirect()->toRoute('login');
+        }
+      }
+
       return new ViewModel(array(
         'paginator' => $paginator,
         'search_by' => $search_by,
         'page' => $page,
         'searchFilter' => $searchFilter,
         'route' => $route,
+        'user' => $user,
       ));
     }
 }

@@ -13,6 +13,8 @@ return array(
         'Member',
         'Invest',
         'Affiliate',
+        'Page',
+        'Contact',
     ),
 
     // These are various options for the listeners attached to the ModuleManager

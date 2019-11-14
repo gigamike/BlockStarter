@@ -10,6 +10,7 @@ use Project\Model\ProjectEntity;
 
 use Gumlet\ImageResize;
 use Web3\Web3;
+use Web3\Contract;
 use Web3\Utils;
 
 class IndexController extends AbstractActionController
@@ -64,140 +65,14 @@ class IndexController extends AbstractActionController
 
   public function createAction()
   {
-    $config = $this->getServiceLocator()->get('Config');
-    $web3 = new Web3($config['ethereumRpcServer']);
-    $eth = $web3->eth;
-
-    /*
-    $utils = new Utils;
-    echo $utils->toHex(0x100000E);
-    exit();
-    */
-
-    /*
-    echo 'Eth Get Account and Balance' . PHP_EOL;
-    $eth->accounts(function ($err, $accounts) use ($eth) {
-    if ($err !== null) {
-      echo 'Error: ' . $err->getMessage();
-      return;
+    $user = $this->getUserMapper()->getUser($this->identity()->id);
+    if(!$user){
+      $this->flashMessenger()->setNamespace('error')->addMessage('You need to login or register first.');
+      return $this->redirect()->toRoute('login');
     }
-    foreach ($accounts as $account) {
-        echo 'Account: ' . $account . PHP_EOL;
-        $eth->getBalance($account, function ($err, $balance) {
-          if ($err !== null) {
-            echo 'Error: ' . $err->getMessage();
-            return;
-          }
-          echo 'Balance: ' . $balance . PHP_EOL;
-        });
-      }
-    });
-    */
 
-    /*
-    $personal = $web3->personal;
-    $newAccount = '';
-    echo 'Personal Create Account and Unlock Account' . PHP_EOL;
-    // create account
-    $personal->newAccount('123456', function ($err, $account) use (&$newAccount) {
-    	if ($err !== null) {
-    	    echo 'Error: ' . $err->getMessage();
-    		return;
-    	}
-    	$newAccount = $account;
-    	echo 'New account: ' . $account . PHP_EOL;
-    });
+    $config = $this->getServiceLocator()->get('Config');
 
-    $personal->unlockAccount($newAccount, '123456', function ($err, $unlocked) {
-    	if ($err !== null) {
-    		echo 'Error: ' . $err->getMessage();
-    		return;
-    	}
-    	if ($unlocked) {
-            echo 'New account is unlocked!' . PHP_EOL;
-    	} else {
-    	    echo 'New account isn\'t unlocked' . PHP_EOL;
-    	}
-    });
-
-    // get balance
-    $web3->eth->getBalance($newAccount, function ($err, $balance) {
-    	if ($err !== null) {
-    		echo 'Error: ' . $err->getMessage();
-    		return;
-    	}
-    	echo 'Balance: ' . $balance->toString() . PHP_EOL;
-    });
-
-    // remember to lock account after transaction
-    $personal->lockAccount($newAccount, function ($err, $locked) {
-    	if ($err !== null) {
-    		echo 'Error: ' . $err->getMessage();
-    		return;
-    	}
-    	if ($locked) {
-            echo 'New account is locked!' . PHP_EOL;
-    	} else {
-    	    echo 'New account isn\'t locked' . PHP_EOL;
-    	}
-    });
-    */
-/*
-    $eth = $web3->eth;
-    echo 'Eth Send Transaction' . PHP_EOL;
-    $eth->accounts(function ($err, $accounts) use ($eth) {
-        if ($err !== null) {
-            echo 'Error: ' . $err->getMessage();
-            return;
-        }
-        $fromAccount = '0xD61dce88a4a479A501c438cC53b70182169f85c3'; // $accounts[0];
-        $toAccount = '0x1fBB5dd5492e52D3f9d90de60a327F8C1319FB72'; // $accounts[1];
-        // get balance
-        $eth->getBalance($fromAccount, function ($err, $balance) use($fromAccount) {
-            if ($err !== null) {
-                echo 'Error: ' . $err->getMessage();
-                return;
-            }
-            echo $fromAccount . ' Balance: ' . $balance . PHP_EOL;
-        });
-        $eth->getBalance($toAccount, function ($err, $balance) use($toAccount) {
-            if ($err !== null) {
-                echo 'Error: ' . $err->getMessage();
-                return;
-            }
-            echo $toAccount . ' Balance: ' . $balance . PHP_EOL;
-        });
-        // send transaction
-        $eth->sendTransaction([
-            'from' => $fromAccount,
-            'to' => $toAccount,
-            'value' => '0x1000000000000000' // https://etherconverter.online/
-        ], function ($err, $transaction) use ($eth, $fromAccount, $toAccount) {
-            if ($err !== null) {
-                echo 'Error: ' . $err->getMessage();
-                return;
-            }
-            echo 'Tx hash: ' . $transaction . PHP_EOL;
-            // get balance
-            $eth->getBalance($fromAccount, function ($err, $balance) use($fromAccount) {
-                if ($err !== null) {
-                    echo 'Error: ' . $err->getMessage();
-                    return;
-                }
-                echo $fromAccount . ' Balance: ' . $balance . PHP_EOL;
-            });
-            $eth->getBalance($toAccount, function ($err, $balance) use($toAccount) {
-                if ($err !== null) {
-                    echo 'Error: ' . $err->getMessage();
-                    return;
-                }
-                echo $toAccount . ' Balance: ' . $balance . PHP_EOL;
-            });
-        });
-    });
-
-    exit();
-*/
     $form = $this->getServiceLocator()->get('ProjectForm');
     $project = new ProjectEntity();
     $form->bind($project);
@@ -243,11 +118,58 @@ class IndexController extends AbstractActionController
 		    }
 
         if(!$isError){
+          $abi = $config['ethereum']['project']['abi'];
+          $bytecode = $config['ethereum']['project']['bytecode'];
+          $fromAccount = $user->getPublicAddress();
+          $toAccount = $config['ethereum']['public_address'];
+
+          $utils = new Utils();
+          $ethToWei = $utils->toWei($minimum_contribution, 'ether');
+          $minimumContribution = $utils->toHex($ethToWei);
+
+          $contractAddress = null;
+          $web3 = new Web3($config['ethereum']['rpc']);
+          $contract = new Contract($web3->provider, $abi);
+          $web3->eth->accounts(function ($err, $accounts) use ($contract, $bytecode, $fromAccount, $toAccount, $minimumContribution, &$contractAddress) {
+            // print_r($accounts);
+            if ($err === null) {
+              if (isset($accounts)) {
+                $accounts = $accounts;
+              } else {
+                throw new RuntimeException('Please ensure you have access to web3 json rpc provider.');
+              }
+            }
+            $contract->bytecode($bytecode)->new($minimumContribution, $fromAccount, [
+                'from' => $fromAccount,
+                'gas' => '0x200b20'
+              ], function ($err, $result) use ($contract, $fromAccount, $toAccount, &$contractAddress) {
+                // print_r($result);
+                if ($err !== null) {
+                  throw $err;
+                }
+                if ($result) {
+                  // echo "\nTransaction has made:) id: " . $result . "\n";
+                }
+                $transactionId = $result;
+                $contract->eth->getTransactionReceipt($transactionId, function ($err, $transaction) use ($contract, $fromAccount, $toAccount, &$contractAddress) {
+                  if ($err !== null) {
+                    throw $err;
+                  }
+                  if ($transaction) {
+                    $contractAddress = $transaction->contractAddress;
+                    // echo "\nContract Address: " . $contractAddress;
+                    // echo "\nTransaction has mind:) block number: " . $transaction->blockNumber . "\n";
+                  }
+                });
+            });
+          });
+
           $authService = $this->serviceLocator->get('auth_service');
 
           $project = new ProjectEntity;
           $project->setName($name);
           $project->setDescription($description);
+          $project->setContractAddress($contractAddress);
           $project->setMinimumContribution($minimum_contribution);
           $project->setCreatedUserId($authService->getIdentity()->id);
           $this->getProjectMapper()->save($project);
@@ -262,30 +184,30 @@ class IndexController extends AbstractActionController
           if(!file_exists($destination)){
              move_uploaded_file($_FILES['photo']['tmp_name'], $destination);
           }
-          $destination2 = $directory . "/photo_crop_750x450." . $ext;
+          $destination2 = $directory . "/photo_crop_480x320." . $ext;
           if(file_exists($destination2)){
              unlink($destination2);
           }
           $image = new ImageResize($destination);
-          $image->crop(750, 450);
+          $image->crop(480, 320);
           $image->save($destination2);
           if(file_exists($destination)){
              unlink($destination);
           }
 
-          $destination3 = $directory . "/photo_750x450." . $ext;
+          $destination3 = $directory . "/photo_480x320." . $ext;
           if(file_exists($destination3)){
              unlink($destination3);
           }
           $image = new ImageResize($destination2);
-          $image->resize(750, 450, $allow_enlarge = True);
+          $image->resize(480, 320, $allow_enlarge = True);
           $image->save($destination3);
           if(file_exists($destination2)){
              unlink($destination2);
           }
 
           $this->flashMessenger()->setNamespace('success')->addMessage('Project added successfully.');
-          return $this->redirect()->toRoute('project');
+          return $this->redirect()->toRoute('home');
         }
       }
     }

@@ -6,7 +6,7 @@ pragma solidity >=0.4.22 <0.7.0;
 contract ProjectFactory {
   address[] public deployedProjects;
 
-  function createProject(uint minimumContribution) public {
+  constructor(uint minimumContribution) public {
     address newProject = address(new Project(minimumContribution, msg.sender));
     deployedProjects.push(newProject);
   }
