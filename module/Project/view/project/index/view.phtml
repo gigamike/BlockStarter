@@ -137,7 +137,8 @@
                     I agree to the
                     <a class="link-muted" href="#">Terms and Conditions</a>
                   </small>
-                  <form id="myForm" method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getContractAddress(),)); ?>">
+                  <form method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getContractAddress(),)); ?>">
+                    <input type="hidden" name="action" value="invest">
                     <div class="form-row align-items-center">
                       <div class="col-sm-12 my-1">
                         <div class="input-group">
@@ -157,11 +158,78 @@
                   <?php endif; ?>
                 </div>
             <?php else: ?>
+              <div class="card">
+                <h5 class="card-header">Add Milestone</h5>
+                <div class="card-body">
+                  <form method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getContractAddress(),)); ?>">
+                      <input type="hidden" name="action" value="milestone">
+                    <div class="form-group">
+                      <label>Type</label>
+                      <select class="form-control" name="milestone_type" id="milestone_type" required>
+                        <option value="general">General</option>
+                        <option value="purchase_order">Purchase Order</option>
+                      </select>
+                    </div>
+                    <div class="form-group supplier_wrapper">
+                      <label>Supplier</label>
+                      <select class="form-control" name="supplier_id" id="supplier_id">
+                        <option value="">Select Supplier</option>
+                        <?php foreach ($this->suppliers as $row): ?>
+                          <option value="<?php echo $this->escapehtml($row->getId()); ?>"><?php echo $this->escapehtml($row->getName()); ?> (<?php echo $this->escapehtml($row->getPublicAddress()); ?>)</option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+                    <div class="form-group supplier_wrapper">
+                      <label>Amount</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">ETH</div>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Amount" id="amount" name="amount" value="">
+                      </div>
+                    </div>
+                    <div class="form-group supplier_wrapper">
+                      <label>Date expected</label>
+                      <input type="text" class="form-control" id="date_expected" name="date_expected" value="">
+                    </div>
+                    <div class="form-group">
+                      <label>Description</label>
+                      <textarea class="form-control" name="description" id="description" rows="3" required></textarea>
+                      (Character Count: <span id="description_count">0</span>)
+                    </div>
+                    <div class="form-group">
+                      <label>Comments</label>
+                      <textarea class="form-control" name="comments" id="comments" rows="3"></textarea>
+                      (Character Count: <span id="comments_count">0</span>)
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                  <script>
+                  $(document).ready(function(){
+                    $("#milestone_type").change(function() {
+                      if($(this).val() == 'purchase_order'){
+                        $(".supplier_wrapper").show();
+                      }else{
+                        $(".supplier_wrapper").hide();
+                      }
+                    });
+                    $(".supplier_wrapper").hide();
+
+                    $("#description").on("input", function() {
+                      $("#description_count").text(this.value.length);
+                    });
+                    $("#comments").on("input", function() {
+                      $("#comments_count").text(this.value.length);
+                    });
+                    $("#date_expected").datepicker({
+                      dateFormat:"yy-mm-dd",
+                    });
+                  });
+                  </script>
+                </div>
+              </div>
             <?php endif; ?>
           <?php endif; ?>
-
-
-
 
           </div>
         </div>
@@ -171,10 +239,3 @@
     </div>
   <!-- End Login Form -->
 </div>
-
-
-<script>
-$(document).ready(function(){
-
-});
-</script>

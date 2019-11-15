@@ -27,6 +27,12 @@ class IndexController extends AbstractActionController
     return $sm->get('ProjectMapper');
   }
 
+  public function getSupplierMapper()
+  {
+    $sm = $this->getServiceLocator();
+    return $sm->get('SupplierMapper');
+  }
+
   public function indexAction()
   {
     $route = $this->getServiceLocator()->get('Application')->getMvcEvent()->getRouteMatch()->getMatchedRouteName();
@@ -317,59 +323,137 @@ class IndexController extends AbstractActionController
     });
 
     if($_POST){
-      $amount = isset($_POST['amount']) ? $_POST['amount'] : null;
-      if(!empty($amount) && is_numeric($amount)){
-        $wei = Utils::toWei($amount, 'ether');
-        $weiHex = Utils::toHex($wei, 'wei');
-        $fromAccount = $user->getPublicAddress();
-        $toAccount = $projectOwner->getPublicAddress();
+      $action = isset($_POST['action']) ? $_POST['action'] : null;
+      switch($action){
+        case 'invest':
+          $amount = isset($_POST['amount']) ? $_POST['amount'] : null;
+          if(!empty($amount) && is_numeric($amount)){
+            $wei = Utils::toWei($amount, 'ether');
+            $weiHex = Utils::toHex($wei, 'wei');
+            $fromAccount = $user->getPublicAddress();
+            $toAccount = $projectOwner->getPublicAddress();
 
-        $eth = $web3->eth;
-        $eth->sendTransaction([
-            'from' => $fromAccount,
-            'to' => $toAccount,
-            'value' => $weiHex
-        ], function ($err, $transaction) use ($eth, $fromAccount, $toAccount) {
-            if ($err !== null) {
-                echo 'Error: ' . $err->getMessage();
-                return;
-            }
-            // echo 'Tx hash: ' . $transaction . PHP_EOL;
-            // get balance
-            $eth->getBalance($fromAccount, function ($err, $balance) use($fromAccount) {
+            $eth = $web3->eth;
+            $eth->sendTransaction([
+                'from' => $fromAccount,
+                'to' => $toAccount,
+                'value' => $weiHex
+            ], function ($err, $transaction) use ($eth, $fromAccount, $toAccount) {
                 if ($err !== null) {
                     echo 'Error: ' . $err->getMessage();
                     return;
                 }
-                  // echo $fromAccount . ' Balance: ' . $balance . PHP_EOL;
+                // echo 'Tx hash: ' . $transaction . PHP_EOL;
+                // get balance
+                $eth->getBalance($fromAccount, function ($err, $balance) use($fromAccount) {
+                    if ($err !== null) {
+                        echo 'Error: ' . $err->getMessage();
+                        return;
+                    }
+                      // echo $fromAccount . ' Balance: ' . $balance . PHP_EOL;
+                });
+                $eth->getBalance($toAccount, function ($err, $balance) use($toAccount) {
+                    if ($err !== null) {
+                        echo 'Error: ' . $err->getMessage();
+                        return;
+                    }
+                    // echo $toAccount . ' Balance: ' . $balance . PHP_EOL;
+                });
             });
-            $eth->getBalance($toAccount, function ($err, $balance) use($toAccount) {
-                if ($err !== null) {
-                    echo 'Error: ' . $err->getMessage();
-                    return;
-                }
-                // echo $toAccount . ' Balance: ' . $balance . PHP_EOL;
-            });
-        });
 
-        $contract->at($project->getContractAddress())->send('contribute', [
-          'gas' => '0x200b20',
-          'from' => $fromAccount,
-          'to' => $toAccount,
-          'value' => $weiHex
-        ], function($error, $result) use ($project){
-          // print_r($error);
-          // print_r($result);
-          if ($error !== null) {
-            throw $error;
+            $contract->at($project->getContractAddress())->send('contribute', [
+              'gas' => '0x200b20',
+              'from' => $fromAccount,
+              'to' => $toAccount,
+              'value' => $weiHex
+            ], function($error, $result) use ($project){
+              // print_r($error);
+              // print_r($result);
+              if ($error !== null) {
+                throw $error;
+              }
+              if ($result) {
+                // echo "\nTransaction has made:) id: " . $result . "\n";
+                $this->flashMessenger()->setNamespace('success')->addMessage("Thankyou for backing up this project. Transaction successful. Transaction ID: " . $result);
+                return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getContractAddress(),));
+                exit();
+              }
+            });
           }
-          if ($result) {
-            // echo "\nTransaction has made:) id: " . $result . "\n";
-            $this->flashMessenger()->setNamespace('success')->addMessage("Thankyou for backing up this project. Transaction successful. Transaction ID: " . $result);
-            return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getContractAddress(),));
-            exit();
+          break;
+        case 'milestone':
+          $milestone_type = isset($_POST['milestone_type']) ? $_POST['milestone_type'] : null;
+          $supplier_id = isset($_POST['supplier_id']) ? $_POST['supplier_id'] : null;
+          $amount = isset($_POST['amount']) ? $_POST['amount'] : null;
+          $date_expected = isset($_POST['date_expected']) ? $_POST['date_expected'] : null;
+          $description = isset($_POST['description']) ? $_POST['description'] : null;
+          $comments = isset($_POST['comments']) ? $_POST['comments'] : null;
+          $fromAccount = $user->getPublicAddress();
+
+          switch($milestone_type){
+            case 'general':
+              $recipient = $fromAccount;
+              $value = 0;
+              $time = time();
+              $contractAddress = $project->getContractAddress();
+
+              $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+                'from' => $fromAccount,
+                'gas' => '0x200b20'
+              ], function($error, $result) use ($project){
+                // print_r($error);
+                // print_r($result);
+                if ($error !== null) {
+                  throw $error;
+                }
+                if ($result) {
+                  // echo "\nTransaction has made:) id: " . $result . "\n";
+                  $this->flashMessenger()->setNamespace('success')->addMessage("Milestone added. Transaction successful. Transaction ID: " . $result);
+                  header("Location: /project/view/" . $project->getContractAddress());
+                  exit();
+                }
+              });
+
+              break;
+            case 'purchase_order':
+              $supplier = $this->getSupplierMapper()->getSupplier($supplier_id);
+              if(!$supplier){
+                $this->flashMessenger()->setNamespace('error')->addMessage('Invalid supplier.');
+                header("Location: /project/view/" . $project->getContractAddress());
+                exit();
+              }
+
+              $value = $amount;
+              $description1 = "Payment for " . $supplier->getName() . ". Amount paid ETH " . $value;
+              $description = $description1 . $description;
+
+              $recipient = $fromAccount;
+              $time = time();
+              $contractAddress = $project->getContractAddress();
+
+              $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+                'from' => $fromAccount,
+                'gas' => '0x200b20'
+              ], function($error, $result) use ($project){
+                // print_r($error);
+                // print_r($result);
+                if ($error !== null) {
+                  throw $error;
+                }
+                if ($result) {
+                  // echo "\nTransaction has made:) id: " . $result . "\n";
+                  $this->flashMessenger()->setNamespace('success')->addMessage("Milestone added. Transaction successful. Transaction ID: " . $result);
+                  header("Location: /project/view/" . $project->getContractAddress());
+                  exit();
+                }
+              });
+              break;
+            default:
           }
-        });
+
+          exit();
+          break;
+        default:
       }
     }
 
@@ -408,6 +492,10 @@ class IndexController extends AbstractActionController
       }
     }
 
+    $filter = array();
+    $order = array('name');
+    $suppliers = $this->getSupplierMapper()->fetch(false, $filter, $order);
+
     return new ViewModel([
       'project' => $project,
       'milestones' => $milestones,
@@ -415,82 +503,7 @@ class IndexController extends AbstractActionController
       'projectOwner' => $projectOwner,
       'userBalance' => $userBalance,
       'projectBalance' => $projectBalance,
-    ]);
-  }
-
-  public function requestAction()
-  {
-    $id = (int)$this->params('id');
-    if (!$id) {
-      return $this->redirect()->toRoute('home');
-    }
-    $project = $this->getProjectMapper()->getProject($id);
-    if(!$project){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-
-    $filter = array(
-      'project_id' => $project->getId(),
-    );
-    $order=array();
-    $projectSpendingRequests = $this->getProjectSpendingRequestMapper()->getProjectSpendingRequests(false, $filter, $order);
-
-    return new ViewModel([
-      'project' => $project,
-      'projectSpendingRequests' => $projectSpendingRequests,
-    ]);
-  }
-
-  public function addRequestAction()
-  {
-    $id = (int)$this->params('id');
-    if (!$id) {
-      return $this->redirect()->toRoute('home');
-    }
-    $project = $this->getProjectMapper()->getProject($id);
-    if(!$project){
-      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
-      return $this->redirect()->toRoute('home');
-    }
-
-    $config = $this->getServiceLocator()->get('Config');
-
-    /*
-    $form = $this->getServiceLocator()->get('ProjectSpendingRequestForm');
-    $user = new ProjectEntity();
-    if($this->getRequest()->isPost()) {
-      $data = $this->params()->fromPost();
-      $form->setData($data);
-      if($form->isValid()) {
-        $isError = false;
-
-        $data = $form->getData();
-
-        $description = $data['description'];
-        $amount = $data['amount'];
-        $supplier_id = $data['supplier_id'];
-
-        $projectSpendingRequest = new ProjectSpendingRequestEntity;
-        $projectSpendingRequest->setProjectId($project->getId());
-        $projectSpendingRequest->setDescription($data['description']);
-        $projectSpendingRequest->setAmount($data['amount']);
-        $projectSpendingRequest->setSupplierId($data['supplier_id']);
-        $projectSpendingRequest->setIsFinalized('N');
-        $this->getProjectSpendingRequestMapper()->save($projectSpendingRequest);
-
-        $command = 'sudo cleos push action peos3 request \'["peos"]\' -p bob@active';
-        exec($command, $output);
-
-        $this->flashMessenger()->setNamespace('success')->addMessage('Spending request added successfully.');
-        return $this->redirect()->toRoute('project', array('action' => 'request', 'id' => $project->getId(),));
-      }
-    }
-    */
-
-    return new ViewModel([
-      'project' => $project,
-      // 'form' => $form,
+      'suppliers' => $suppliers,
     ]);
   }
 }
