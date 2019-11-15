@@ -29,6 +29,11 @@ class Module
         $application = $e->getApplication();
         $sm = $application->getServiceManager();
 
+
+        if(isset($_GET['ref']) && !empty($_GET['ref'])){
+          setcookie("REF_ID", $_GET['ref'], time() + (86400 * 30), "/");
+        }
+
         if ($e->getRequest() instanceof HttpRequest) {
           $application->getEventManager()->attach(
             'dispatch',
@@ -47,6 +52,8 @@ class Module
               if (substr($routeMatch->getMatchedRouteName(), 0, 7) == 'chatbot') {
                 $controller->layout('layout/chatbot-layout');
               }
+
+
             },
             -100
           );

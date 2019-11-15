@@ -132,22 +132,6 @@ return array(
                     ),
                 ),
             ),
-            'smart-contract' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route'    => '/smart-contract[/:action][/:id][/page/:page][/search_by/:search_by]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                        'page' => '[0-9]+',
-                        'search_by' => '.*',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'SmartContract\Controller\Index',
-                        'action'     => 'index',
-                    ),
-                ),
-            ),
             'chatbot' => array(
                 'type' => 'segment',
                 'options' => array(

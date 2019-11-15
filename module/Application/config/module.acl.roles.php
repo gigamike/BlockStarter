@@ -13,7 +13,6 @@ return array(
 		'service',
 		'cron-test',
 		'chatbot',
-		'smart-contract',
 		'suppliers',
 	),
 	'supplier'=> array(

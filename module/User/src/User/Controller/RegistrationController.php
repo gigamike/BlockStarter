@@ -38,6 +38,11 @@ class RegistrationController extends AbstractActionController
       $user = new UserEntity();
 		  $form->bind($user);
 
+      $refUser = null;
+      if(isset($_COOKIE['REF_ID']) && !empty($_COOKIE['REF_ID'])){
+        $refUser = $this->getUserMapper()->getUser($_COOKIE['REF_ID']);
+      }
+
       if($this->getRequest()->isPost()) {
         $data = $this->params()->fromPost();
         $form->setData($data);
@@ -321,11 +326,16 @@ class RegistrationController extends AbstractActionController
             return $this->redirect()->toRoute('login');
           }
         }
+      }else{
+        if($refUser){
+          $form->get('referred_by')->setValue($refUser->getFirstName() . " " . $refUser->getLastName());
+        }
       }
 
       return new ViewModel([
         'form' => $form,
         'config' => $config,
+
       ]);
     }
 }

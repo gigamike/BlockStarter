@@ -504,6 +504,7 @@ class IndexController extends AbstractActionController
       'userBalance' => $userBalance,
       'projectBalance' => $projectBalance,
       'suppliers' => $suppliers,
+      'userBalance' => $userBalance,
     ]);
   }
 }
