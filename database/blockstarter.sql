@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 05, 2019 at 12:08 PM
+-- Generation Time: Nov 16, 2019 at 01:32 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.1.31
 
@@ -303,9 +303,17 @@ CREATE TABLE `project` (
   `name` varchar(255) NOT NULL,
   `description` text,
   `minimum_contribution` decimal(10,8) NOT NULL,
-  `public_address` varchar(255) DEFAULT NULL,
-  `created_datetime` datetime NOT NULL
+  `contract_address` varchar(255) DEFAULT NULL,
+  `created_datetime` datetime NOT NULL,
+  `created_user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `project`
+--
+
+INSERT INTO `project` (`id`, `name`, `description`, `minimum_contribution`, `contract_address`, `created_datetime`, `created_user_id`) VALUES
+(1, 'Gigamike Solution', 'test', '0.00001000', '0xedd255f8b9310a08f98c8535ecae277df8c25523', '2019-11-15 23:53:17', 1);
 
 -- --------------------------------------------------------
 
@@ -327,8 +335,8 @@ CREATE TABLE `supplier` (
 --
 
 INSERT INTO `supplier` (`id`, `name`, `description`, `public_address`, `created_user_id`, `created_datetime`) VALUES
-(1, 'Malaya Lumber & Construction Supply', 'We offer construction materials, plumbing products, hardware supplies, lumber, plywood, cement, gravel and sand, hollow blocks and paints.', NULL, 6, '2019-11-05 11:46:35'),
-(2, 'Vic\'s Construction & Sons Company', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', NULL, 7, '2019-11-05 12:06:16');
+(1, 'Malaya Lumber & Construction Supply', 'We offer construction materials, plumbing products, hardware supplies, lumber, plywood, cement, gravel and sand, hollow blocks and paints.', '0xF80B948F144cdbE82d2B7D4932359c5d4B103699', 6, '2019-11-05 11:46:35'),
+(2, 'Vic\'s Construction & Sons Company', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 7, '2019-11-05 12:06:16');
 
 -- --------------------------------------------------------
 
@@ -358,11 +366,11 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `role`, `email`, `password`, `first_name`, `last_name`, `city`, `country_id`, `public_address`, `salt`, `active`, `referrer_user_id`, `created_datetime`, `created_user_id`) VALUES
-(1, 'member', 'manager@gigamike.net', '6d7b0b32a2162d7f14f6490b3bd8ea37', 'Mik', 'Galon', 'Paranaque City', 182, NULL, '$E3rj1QMa_al>W~:ktXuN1~@UT)GF3p$Ci-rp$^N`Ur=P_B!uq', 'Y', 0, '2019-11-05 11:37:25', 0),
-(2, 'member', 'reseller@gigamike.net', 'f1e3d78e930f03908a1ef2b53f235139', 'Amah', 'Galon', 'Paranaque City', 182, NULL, '`+$apw90O>&*U8rRm7tFdQ3YqUL@nZ7;!I\\wyw(dpzZ#h=?kWT', 'Y', 0, '2019-11-05 11:39:39', 0),
-(3, 'member', 'investor@gigamike.net', 'c108e52b49d7e7938e047607b1528c85', 'Zeev', 'Galon', 'Paranaque City', 182, NULL, 'JEv}sj;xTygA.h~T;\\6sj(yB=Wn0/?t(o@OpRDu%W)sone#&>u', 'Y', 0, '2019-11-05 11:40:25', 0),
-(6, 'supplier', 'supplier@gigamike.net', '8fc095c1361b77d0ca16d34da9c31ec3', 'Susan', 'Galon', 'Paranaque City', 182, NULL, 'l?:{x@QZ9ap9w`^BYaX2:Y%]?eU+C!m*/cn*~V68t+_oerAlMh', 'Y', 0, '2019-11-05 11:46:35', 0),
-(7, 'supplier', 'supplier2@gigamike.net', '01f4be4c3bfdf8662a42987285ce5274', 'Vic', 'Galon', 'Makati City', 182, NULL, 'f#C*WQY;(v`v6&PO+ph=QZDR>aTH\'[1F\"MTuHBWev|\'&j>w=\'l', 'Y', 0, '2019-11-05 12:06:16', 0);
+(1, 'member', 'manager@gigamike.net', '6d7b0b32a2162d7f14f6490b3bd8ea37', 'Mik', 'Galon', 'Paranaque City', 182, '0xd21361f7EeA74e7a8b7EC9eFCC9d78fD7157E453', '$E3rj1QMa_al>W~:ktXuN1~@UT)GF3p$Ci-rp$^N`Ur=P_B!uq', 'Y', 0, '2019-11-05 11:37:25', 0),
+(2, 'member', 'reseller@gigamike.net', 'f1e3d78e930f03908a1ef2b53f235139', 'Amah', 'Galon', 'Paranaque City', 182, '0x06762BD5e5Cb6Ed955B703dFdDAF3e2122b610e6', '`+$apw90O>&*U8rRm7tFdQ3YqUL@nZ7;!I\\wyw(dpzZ#h=?kWT', 'Y', 0, '2019-11-05 11:39:39', 0),
+(3, 'member', 'investor@gigamike.net', 'c108e52b49d7e7938e047607b1528c85', 'Zeev', 'Galon', 'Paranaque City', 182, '0x47bF792dFB5c69c938b0377e90AD22071318afA4', 'JEv}sj;xTygA.h~T;\\6sj(yB=Wn0/?t(o@OpRDu%W)sone#&>u', 'Y', 0, '2019-11-05 11:40:25', 0),
+(6, 'supplier', 'supplier@gigamike.net', '8fc095c1361b77d0ca16d34da9c31ec3', 'Susan', 'Galon', 'Paranaque City', 182, '0xF80B948F144cdbE82d2B7D4932359c5d4B103699', 'l?:{x@QZ9ap9w`^BYaX2:Y%]?eU+C!m*/cn*~V68t+_oerAlMh', 'Y', 0, '2019-11-05 11:46:35', 0),
+(7, 'supplier', 'supplier2@gigamike.net', '01f4be4c3bfdf8662a42987285ce5274', 'Vic', 'Galon', 'Makati City', 182, '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 'f#C*WQY;(v`v6&PO+ph=QZDR>aTH\'[1F\"MTuHBWev|\'&j>w=\'l', 'Y', 0, '2019-11-05 12:06:16', 0);
 
 --
 -- Indexes for dumped tables
@@ -373,9 +381,10 @@ INSERT INTO `user` (`id`, `role`, `email`, `password`, `first_name`, `last_name`
 --
 ALTER TABLE `project`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `contract_address` (`contract_address`),
   ADD KEY `name` (`name`),
   ADD KEY `created_datetime` (`created_datetime`),
-  ADD KEY `public_address` (`public_address`);
+  ADD KEY `created_user_id` (`created_user_id`);
 
 --
 -- Indexes for table `supplier`
@@ -409,7 +418,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `supplier`
