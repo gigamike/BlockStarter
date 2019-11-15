@@ -8,10 +8,29 @@
           <h1 class="h2 font-weight-medium mb-3">Welcome <?php echo $this->user->getFirstName(); ?> <?php echo $this->user->getLastName(); ?></h1>
         </div>
         <!-- End Info -->
+
+        <?php
+          $flash = $this->flashMessenger();
+          $flash->setMessageOpenFormat('<div%s role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+              ')
+              ->setMessageSeparatorString('')
+              ->setMessageCloseString('</div>');
+
+          echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+          echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+          echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+          echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+           ?>
       </div>
     </div>
   </div>
   <!-- End Hero Section -->
+
+
+
 
   <!-- Call to Action Section -->
   <div class="container">
@@ -130,7 +149,12 @@
         );
       ?>
         <?php foreach ($paginator as $row):
-            $projectAttributes = $this->getProjectAttributes($row->getContractAddress(), $this->user->getPublicAddress());
+            if ($user = $this->identity()){
+              $publicAddress = $this->user->getPublicAddress();
+            }else{
+              $publicAddress = $this->config['ethereum']['public_address'];
+            }
+            $projectAttributes = $this->getProjectAttributes($row->getContractAddress(), $publicAddress);
             // echo "<pre>";
             // print_r($projectAttributes);
             // echo "</pre>"; exit();

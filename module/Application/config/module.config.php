@@ -169,7 +169,7 @@ return array(
                     'route'    => '/project[/:action][/:id][/search_by/:search_by]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
+                        'id' => '.*',
                         'search_by' => '.*',
                     ),
                     'defaults' => array(

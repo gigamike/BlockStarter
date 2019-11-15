@@ -250,17 +250,71 @@ class IndexController extends AbstractActionController
     ]);
   }
 
+  public function wei2eth($wei)
+  {
+    return bcdiv($wei,'1000000000000000000',18);
+  }
+
   public function viewAction()
   {
-    $id = (int)$this->params('id');
-    if (!$id) {
+    $contract_address = $this->params('id');
+    if (!$contract_address) {
       return $this->redirect()->toRoute('home');
     }
-    $project = $this->getProjectMapper()->getProject($id);
+    $project = $this->getProjectMapper()->getProjectByContractAddress($contract_address);
     if(!$project){
       $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project.');
       return $this->redirect()->toRoute('home');
     }
+    $projectOwner = $this->getUserMapper()->getUser($project->getCreatedUserId());
+    if(!$projectOwner){
+      $this->flashMessenger()->setNamespace('error')->addMessage('Invalid Project Owner.');
+      return $this->redirect()->toRoute('home');
+    }
+
+    $user = $this->getUserMapper()->getUser($this->identity()->id);
+    if(!$user){
+      $this->flashMessenger()->setNamespace('error')->addMessage('You need to login or register first.');
+      return $this->redirect()->toRoute('login');
+    }
+
+    $config = $this->getServiceLocator()->get('Config');
+    $abi = $config['ethereum']['project']['abi'];
+    $web3 = new Web3($config['ethereum']['rpc']);
+    $contract = new Contract($web3->provider, $abi);
+    $utils = new Utils();
+
+    $personal = $web3->personal;
+
+    $userBalance = 0;
+    $web3->eth->getBalance($user->getPublicAddress(), function ($err, $balance) use ($utils, &$userBalance){
+      // print_r($balance);
+    	if ($err !== null) {
+    		echo 'Error: ' . $err->getMessage();
+    		return;
+    	}
+
+      // $etherInHex = $utils->toEther($balance->toString(), 'wei');
+      // $userBalance = $etherInHex[0]->value;
+
+      $wei = $balance->value;
+      $userBalance = $this->wei2eth($wei);
+    });
+
+    $projectBalance = 0;
+    $web3->eth->getBalance($projectOwner->getPublicAddress(), function ($err, $balance) use ($utils, &$projectBalance){
+      // print_r($balance);
+    	if ($err !== null) {
+    		echo 'Error: ' . $err->getMessage();
+    		return;
+    	}
+
+      // list($bnq, $bnr) = Utils::toEther($balance->value, 'wei');
+      // $projectBalance = (float)$bnq->toString();
+
+      $wei = $balance->value;
+      $projectBalance = $this->wei2eth($wei);
+    });
 
     if($_POST){
       $amount = isset($_POST['amount']) ? $_POST['amount'] : null;
@@ -271,35 +325,53 @@ class IndexController extends AbstractActionController
         $projectContributor->setAmount($amount);
         $this->getProjectContributorMapper()->save($projectContributor);
 
-        $command = 'sudo cleos push action peos3 contribute \'["peos"]\' -p bob@active';
-        exec($command, $output);
-
         $this->flashMessenger()->setNamespace('success')->addMessage('Thankyou for backing up this project. You can now vote!');
         return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getId(),));
       }
     }
 
-    $filter = array(
-      'project_id' => $project->getId(),
-      'is_finalized' => 'N',
-    );
-    $countProjectSpendingRequest = $this->getProjectSpendingRequestMapper()->getCountProjectSpendingRequest($filter);
-    $countProjectSpendingRequest = is_null($countProjectSpendingRequest['count_id']) ? 0 : $countProjectSpendingRequest['count_id'];
+    // get milestones
+    // count
+    $fromAccount = $user->getPublicAddress();
 
-    $filter = array(
-      'project_id' => $project->getId(),
-    );
-    $countProjectContributor = $this->getProjectContributorMapper()->getCountProjectContributor($filter);
-    $countProjectContributor = is_null($countProjectContributor['count_id']) ? 0 : $countProjectContributor['count_id'];
+    $milestonesCount = 0;
+    $contract->at($project->getContractAddress())->call('getMilestonesCount', ['from' => $fromAccount], function($error, $result) use (&$milestonesCount){
+      // print_r($error);
+      /// print_r($result);
+      if ($error !== null) {
+        throw $error;
+      }
+      $milestonesCount = $result[0]->value;
+    });
 
-    $sumProjectContributorAmount = $this->getProjectContributorMapper()->getSumProjectContributorAmount($filter);
-    $sumProjectContributorAmount = is_null($sumProjectContributorAmount['sum_amount']) ? 0 : $sumProjectContributorAmount['sum_amount'];
+    $milestones = array();
+    if($milestonesCount > 0){
+      for($ctr = 0; $ctr < $milestonesCount; $ctr++){
+        $contract->at($project->getContractAddress())->call('readMilestone', $ctr, ['from' => $fromAccount], function($error, $result) use (&$milestones){
+          // print_r($error);
+          // print_r($result);
+          if ($error !== null) {
+            throw $error;
+          }
+
+          $milestones[] = array(
+            'description' => $result[1],
+            'comments' => $result[2],
+            'recipient' => $result[3],
+            'value' => $result[4],
+            'time' => $result[5]->value,
+          );
+        });
+      }
+    }
 
     return new ViewModel([
       'project' => $project,
-      'countProjectSpendingRequest' => $countProjectSpendingRequest,
-      'countProjectContributor' => $countProjectContributor,
-      'sumProjectContributorAmount' => $sumProjectContributorAmount,
+      'milestones' => $milestones,
+      'user' => $user,
+      'projectOwner' => $projectOwner,
+      'userBalance' => $userBalance,
+      'projectBalance' => $projectBalance,
     ]);
   }
 
@@ -341,6 +413,7 @@ class IndexController extends AbstractActionController
 
     $config = $this->getServiceLocator()->get('Config');
 
+    /*
     $form = $this->getServiceLocator()->get('ProjectSpendingRequestForm');
     $user = new ProjectEntity();
     if($this->getRequest()->isPost()) {
@@ -370,10 +443,11 @@ class IndexController extends AbstractActionController
         return $this->redirect()->toRoute('project', array('action' => 'request', 'id' => $project->getId(),));
       }
     }
+    */
 
     return new ViewModel([
       'project' => $project,
-      'form' => $form,
+      // 'form' => $form,
     ]);
   }
 }

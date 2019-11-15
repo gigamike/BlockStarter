@@ -135,6 +135,24 @@ class ProjectMapper
 		return $project;
 	}
 
+	public function getProjectByContractAddress($contract_address)
+	{
+		$select = $this->sql->select();
+		$select->where(array('contract_address' => $contract_address));
+
+		$statement = $this->sql->prepareStatementForSqlObject($select);
+		$result = $statement->execute()->current();
+		if (!$result) {
+			return null;
+		}
+
+		$hydrator = new ClassMethods();
+		$project = new ProjectEntity();
+		$hydrator->hydrate($result, $project);
+
+		return $project;
+	}
+
 	public function delete($id)
 	{
     $delete = $this->sql->delete();

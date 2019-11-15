@@ -50,6 +50,8 @@ class IndexController extends AbstractActionController
         }
       }
 
+      $config = $this->getServiceLocator()->get('Config');
+
       return new ViewModel(array(
         'paginator' => $paginator,
         'search_by' => $search_by,
@@ -57,6 +59,7 @@ class IndexController extends AbstractActionController
         'searchFilter' => $searchFilter,
         'route' => $route,
         'user' => $user,
+        'config' => $config,
       ));
     }
 }

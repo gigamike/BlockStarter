@@ -206,4 +206,14 @@ class Module
         ),
       );
     }
+
+    public function getViewHelperConfig() {
+      return array(
+        'factories' => array(
+          'getQRCode' => function($sm){
+            return new \Application\View\Helper\GetQRCode($sm->getServiceLocator());
+          },
+        )
+      );
+    }
 }

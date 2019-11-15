@@ -72,9 +72,6 @@ class Module
     public function getViewHelperConfig() {
       return array(
         'factories' => array(
-          'getQRCode' => function($sm){
-            return new \Project\View\Helper\GetQRCode($sm->getServiceLocator());
-          },
           'getProjectAttributes' => function($sm){
             return new \Project\View\Helper\GetProjectAttributes($sm->getServiceLocator());
           },

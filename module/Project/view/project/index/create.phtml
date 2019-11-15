@@ -23,22 +23,6 @@
         echo $this->form()->openTag($form);
         ?>
 
-        <?php
-          $flash = $this->flashMessenger();
-          $flash->setMessageOpenFormat('<div%s role="alert">
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
-              ')
-              ->setMessageSeparatorString('')
-              ->setMessageCloseString('</div>');
-
-          echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
-          echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
-          echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
-          echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
-           ?>
-
         <!-- Form Group -->
         <div class="js-form-message form-group">
           <?= $this->formLabel($form->get('name')) ?>
