@@ -13,6 +13,21 @@
 
       <div class="row">
         <div class="col-lg-8">
+          <?php
+            $flash = $this->flashMessenger();
+            $flash->setMessageOpenFormat('<div%s role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                ')
+                ->setMessageSeparatorString('')
+                ->setMessageCloseString('</div>');
+
+            echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+            echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+            echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+            echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+             ?>
           <small><strong>Contract Address:</strong> <?php echo $this->escapehtml($this->project->getContractAddress()); ?> </small>
           <hr>
           <div class="text-center">
@@ -115,28 +130,14 @@
               <div class="card">
                 <h5 class="card-header">Contribute to this project!</h5>
                 <div class="card-body">
-                  <?php
-                    $flash = $this->flashMessenger();
-                    $flash->setMessageOpenFormat('<div%s role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        ')
-                        ->setMessageSeparatorString('')
-                        ->setMessageCloseString('</div>');
 
-                    echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
-                    echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
-                    echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
-                    echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
-                     ?>
 
                   <?php if($userBalance >= $this->project->getMinimumContribution()): ?>
                   <small>
                     I agree to the
                     <a class="link-muted" href="#">Terms and Conditions</a>
                   </small>
-                  <form id="myForm" method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getId(),)); ?>">
+                  <form id="myForm" method="post" action="<?php echo $this->url('project', array('action' => 'view', 'id' => $this->project->getContractAddress(),)); ?>">
                     <div class="form-row align-items-center">
                       <div class="col-sm-12 my-1">
                         <div class="input-group">
@@ -147,7 +148,7 @@
                         </div>
                       </div>
                       <div class="col-auto my-1">
-                        <button type="submit" id="myButton" class="btn btn-success">Contribute</button>
+                        <button type="submit" class="btn btn-success">Contribute</button>
                       </div>
                     </div>
                   </form>

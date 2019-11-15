@@ -319,14 +319,57 @@ class IndexController extends AbstractActionController
     if($_POST){
       $amount = isset($_POST['amount']) ? $_POST['amount'] : null;
       if(!empty($amount) && is_numeric($amount)){
-        $projectContributor = new ProjectContributorEntity();
-        $projectContributor->setProjectId($project->getId());
-        $projectContributor->setEosPublicAddress('EOS85kJTsjfgTDzuPyhYCLx4ZSR6wWfpfK1A3bEJNFhnp6eR5mkYn');
-        $projectContributor->setAmount($amount);
-        $this->getProjectContributorMapper()->save($projectContributor);
+        $wei = Utils::toWei($amount, 'ether');
+        $weiHex = Utils::toHex($wei, 'wei');
+        $fromAccount = $user->getPublicAddress();
+        $toAccount = $projectOwner->getPublicAddress();
 
-        $this->flashMessenger()->setNamespace('success')->addMessage('Thankyou for backing up this project. You can now vote!');
-        return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getId(),));
+        $eth = $web3->eth;
+        $eth->sendTransaction([
+            'from' => $fromAccount,
+            'to' => $toAccount,
+            'value' => $weiHex
+        ], function ($err, $transaction) use ($eth, $fromAccount, $toAccount) {
+            if ($err !== null) {
+                echo 'Error: ' . $err->getMessage();
+                return;
+            }
+            // echo 'Tx hash: ' . $transaction . PHP_EOL;
+            // get balance
+            $eth->getBalance($fromAccount, function ($err, $balance) use($fromAccount) {
+                if ($err !== null) {
+                    echo 'Error: ' . $err->getMessage();
+                    return;
+                }
+                  // echo $fromAccount . ' Balance: ' . $balance . PHP_EOL;
+            });
+            $eth->getBalance($toAccount, function ($err, $balance) use($toAccount) {
+                if ($err !== null) {
+                    echo 'Error: ' . $err->getMessage();
+                    return;
+                }
+                // echo $toAccount . ' Balance: ' . $balance . PHP_EOL;
+            });
+        });
+
+        $contract->at($project->getContractAddress())->send('contribute', [
+          'gas' => '0x200b20',
+          'from' => $fromAccount,
+          'to' => $toAccount,
+          'value' => $weiHex
+        ], function($error, $result) use ($project){
+          // print_r($error);
+          // print_r($result);
+          if ($error !== null) {
+            throw $error;
+          }
+          if ($result) {
+            // echo "\nTransaction has made:) id: " . $result . "\n";
+            $this->flashMessenger()->setNamespace('success')->addMessage("Thankyou for backing up this project. Transaction successful. Transaction ID: " . $result);
+            return $this->redirect()->toRoute('project', array('action' => 'view', 'id' => $project->getContractAddress(),));
+            exit();
+          }
+        });
       }
     }
 
