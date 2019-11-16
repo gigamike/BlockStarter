@@ -36,15 +36,15 @@
     ),
    ),
    */
-   'baseUrl' => 'https://uhack2019.gigamike.net/',
+   'baseUrl' => 'https://blockstarter.gigamike.net/',
    // for console, http://stackoverflow.com/questions/2412009/starting-with-zend-tutorial-zend-db-adapter-throws-exception-sqlstatehy000
    // sudo mkdir /var/mysql
    // cd /var/mysql && sudo ln -s /Applications/XAMPP/xamppfiles/var/mysql/mysql.sock
    'db' => array(
      'driver' => 'Pdo',
      'dsn' => "mysql:dbname=gigamike_blockstarter;host=localhost",
-     'username' => 'gigamike_blockst',
-     'password' => 'QouLW{l#2S3{',
+     'username' => '',
+     'password' => '',
      'driver_options' => array(
        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
      ),
