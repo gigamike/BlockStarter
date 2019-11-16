@@ -8,6 +8,7 @@ App Name: BlockStarter<br />
 
 Problems
 ------------
+Problems of existing funding platform<br />
 * Lack of Transparency.<br />
 * Lack of Resources.<br />
 * Lack of Marketing.<br />
