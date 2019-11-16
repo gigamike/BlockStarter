@@ -162,6 +162,16 @@ return array(
                     ),
                 ),
             ),
+            'contact' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route'    => '/contact',
+                    'defaults' => array(
+                        'controller' => 'Contact\Controller\Index',
+                        'action'     => 'index',
+                    ),
+                ),
+            ),
             'suppliers' => array(
               'type' => 'segment',
               'options' => array(

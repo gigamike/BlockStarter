@@ -13,6 +13,10 @@ use Zend\Mail\Transport\Sendmail as Sendmail;
 
 use Gumlet\ImageResize;
 
+use Web3\Web3;
+use Web3\Contract;
+use Web3\Utils;
+
 use User\Model\UserEntity;
 use Supplier\Model\SupplierEntity;
 
@@ -32,6 +36,9 @@ class RegistrationController extends AbstractActionController
 
     public function indexAction()
     {
+
+
+
       $config = $this->getServiceLocator()->get('Config');
 
       $form = $this->getServiceLocator()->get('RegistrationForm');
@@ -50,6 +57,7 @@ class RegistrationController extends AbstractActionController
         if($form->isValid()) {
           $isError = false;
 
+          $email = $this->getRequest()->getPost('email');
           $role = $this->getRequest()->getPost('role');
           $password = $this->getRequest()->getPost('password');
 
@@ -169,6 +177,22 @@ class RegistrationController extends AbstractActionController
           }
 
           if(!$isError){
+            $config = $this->getServiceLocator()->get('Config');
+            $abi = $config['ethereum']['project']['abi'];
+            $web3 = new Web3($config['ethereum']['rpc']);
+
+            $personal = $web3->personal;
+            $newAccount = '';
+            $personal->newAccount($email, function ($err, $account) use (&$newAccount) {
+            	if ($err !== null) {
+            	  echo 'Error: ' . $err->getMessage();
+            		return;
+            	}
+            	$newAccount = $account;
+            	// echo 'New account: ' . $account . PHP_EOL;
+            });
+
+            $user->setPublicAddress($newAccount);
             $user->setCreatedUserId(0);
             $user->setRole($role);
             $user->setActive('Y');
@@ -185,6 +209,7 @@ class RegistrationController extends AbstractActionController
               case 'supplier':
                 $supplier = new SupplierEntity;
                 $supplier->setName($company_name);
+                $supplier->setPublicAddress($newAccount);
                 $supplier->setDescription($company_description);
                 $supplier->setCreatedUserId($user->getId());
                 $this->getSupplierMapper()->save($supplier);

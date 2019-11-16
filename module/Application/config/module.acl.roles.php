@@ -14,6 +14,7 @@ return array(
 		'cron-test',
 		'chatbot',
 		'suppliers',
+		'contact',
 	),
 	'supplier'=> array(
 		'supplier',

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 16, 2019 at 01:32 AM
+-- Generation Time: Nov 16, 2019 at 10:05 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.1.31
 
@@ -308,13 +308,6 @@ CREATE TABLE `project` (
   `created_user_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `project`
---
-
-INSERT INTO `project` (`id`, `name`, `description`, `minimum_contribution`, `contract_address`, `created_datetime`, `created_user_id`) VALUES
-(1, 'Gigamike Solution', 'test', '0.00001000', '0xedd255f8b9310a08f98c8535ecae277df8c25523', '2019-11-15 23:53:17', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -336,7 +329,10 @@ CREATE TABLE `supplier` (
 
 INSERT INTO `supplier` (`id`, `name`, `description`, `public_address`, `created_user_id`, `created_datetime`) VALUES
 (1, 'Malaya Lumber & Construction Supply', 'We offer construction materials, plumbing products, hardware supplies, lumber, plywood, cement, gravel and sand, hollow blocks and paints.', '0xF80B948F144cdbE82d2B7D4932359c5d4B103699', 6, '2019-11-05 11:46:35'),
-(2, 'Vic\'s Construction & Sons Company', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 7, '2019-11-05 12:06:16');
+(2, 'Vic\'s Construction & Sons Company', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 7, '2019-11-05 12:06:16'),
+(3, 'yalehardwareph', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0x7aa2e6f53d4d090dcda235d4123e6627aea9607c', 8, '2019-11-16 09:38:53'),
+(4, 'Up-Town Industrial Sales, Inc.', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0x85afddddfb69a3b903ecd7af92c0d3a030226633', 9, '2019-11-16 09:58:20'),
+(5, 'Kentool Hardware Corp. ', 'The company is a distributor of construction materials, hardware supplies, generator, air compressor, power tools, welding machine, electric motors, etc.', '0xdf489f01f20c8283f5be144e9317ac33d636fd48', 10, '2019-11-16 10:02:13');
 
 -- --------------------------------------------------------
 
@@ -370,7 +366,10 @@ INSERT INTO `user` (`id`, `role`, `email`, `password`, `first_name`, `last_name`
 (2, 'member', 'reseller@gigamike.net', 'f1e3d78e930f03908a1ef2b53f235139', 'Amah', 'Galon', 'Paranaque City', 182, '0x06762BD5e5Cb6Ed955B703dFdDAF3e2122b610e6', '`+$apw90O>&*U8rRm7tFdQ3YqUL@nZ7;!I\\wyw(dpzZ#h=?kWT', 'Y', 0, '2019-11-05 11:39:39', 0),
 (3, 'member', 'investor@gigamike.net', 'c108e52b49d7e7938e047607b1528c85', 'Zeev', 'Galon', 'Paranaque City', 182, '0x47bF792dFB5c69c938b0377e90AD22071318afA4', 'JEv}sj;xTygA.h~T;\\6sj(yB=Wn0/?t(o@OpRDu%W)sone#&>u', 'Y', 0, '2019-11-05 11:40:25', 0),
 (6, 'supplier', 'supplier@gigamike.net', '8fc095c1361b77d0ca16d34da9c31ec3', 'Susan', 'Galon', 'Paranaque City', 182, '0xF80B948F144cdbE82d2B7D4932359c5d4B103699', 'l?:{x@QZ9ap9w`^BYaX2:Y%]?eU+C!m*/cn*~V68t+_oerAlMh', 'Y', 0, '2019-11-05 11:46:35', 0),
-(7, 'supplier', 'supplier2@gigamike.net', '01f4be4c3bfdf8662a42987285ce5274', 'Vic', 'Galon', 'Makati City', 182, '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 'f#C*WQY;(v`v6&PO+ph=QZDR>aTH\'[1F\"MTuHBWev|\'&j>w=\'l', 'Y', 0, '2019-11-05 12:06:16', 0);
+(7, 'supplier', 'supplier2@gigamike.net', '01f4be4c3bfdf8662a42987285ce5274', 'Vic', 'Galon', 'Makati City', 182, '0xBe4BC2B2aAdD232Cdf40AAF028326179661Cf45B', 'f#C*WQY;(v`v6&PO+ph=QZDR>aTH\'[1F\"MTuHBWev|\'&j>w=\'l', 'Y', 0, '2019-11-05 12:06:16', 0),
+(8, 'supplier', 'supplier3@gigamike.net', '441e4986f6d75cc8ac747747e12881a8', 'Randall', 'Timtiman', 'Cavite', 182, '0x7aa2e6f53d4d090dcda235d4123e6627aea9607c', '&M(\"-D_|6\"*[\'U?~|Zc<X,`nvSQ~+>PFj6Usr7UWPb5H1Fhj*(', 'Y', 0, '2019-11-16 09:38:53', 0),
+(9, 'supplier', 'supplier4@gigamike.net', 'b65243fe4cae1d459ea30a23964f9332', 'Paul', 'Salaman', 'Alabang', 182, '0x85afddddfb69a3b903ecd7af92c0d3a030226633', 'wq_sxcBDW*sCCI}NAl##\"A\'Eg*Woz|V:LfkcFqBT/0JZO(\'I=n', 'Y', 0, '2019-11-16 09:58:20', 0),
+(10, 'supplier', 'supplier5@gigamike.net', 'b66addce858f18556773ce3a4f959f96', 'Shiela', 'Cruz', 'Morong', 182, '0xdf489f01f20c8283f5be144e9317ac33d636fd48', 'a0in[j!f,yTp8\'71/wlD#\'{s:2fZ6D1WfkC9I\\<>~{Cyy<m=Qo', 'Y', 0, '2019-11-16 10:02:13', 0);
 
 --
 -- Indexes for dumped tables
@@ -418,19 +417,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `supplier`
 --
 ALTER TABLE `supplier`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
