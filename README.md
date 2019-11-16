@@ -23,9 +23,11 @@ Features:<br />
 
 Demo
 ------------
-Demo 1: <br />
-Demo 2: <br />
-Demo 3: <br />
+Site: https://blockstarter.gigamike.net/<br />
+Presentation: https://blockstarter.gigamike.net/demo/blockstarter.pdf<br />
+Demo 1: https://blockstarter.gigamike.net/demo/create-project.mp4<br />
+Demo 2: https://blockstarter.gigamike.net/demo/supply-chain.mp4<br />
+Demo 3: https://blockstarter.gigamike.net/demo/affiliates.mp4<br />
 
 About Us
 ------------
