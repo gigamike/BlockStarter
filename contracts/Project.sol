@@ -18,17 +18,23 @@ contract ProjectFactory {
 
 contract Project {
   struct Milestone {
+    uint256 id;
+    string milestone_type;
     string description;
     string comments;
     address recipient;
     uint value;
+    uint time;
   }
 
   Milestone[] public milestones;
+  uint256 public nextId;
+
   address public manager;
   uint public minimumContribution;
   mapping(address => address) public contributors;
   uint public contributorsCount;
+
 
   modifier restricted() {
     require(msg.sender == manager);
@@ -47,16 +53,18 @@ contract Project {
     contributorsCount++;
   }
 
-  function createMilestone(string memory description, string memory comments, address recipient, uint value) public restricted {
-    Milestone memory newMilestone = Milestone({
-       description: description,
-       comments: comments,
-       recipient: recipient,
-       value: value
-    });
-
-    milestones.push(newMilestone);
+  function setMilestone(string memory _milestone_type, string memory _description, string memory _comments, address _recipient, uint _value, uint _time) public restricted {
+    milestones.push(Milestone(nextId, _milestone_type, _description, _comments, _recipient, _value, _time));
+    nextId++;
   }
+
+  function readMilestone(uint256 id) view public returns(uint256, string memory, string memory, string memory, address, uint, uint){
+      for(uint256 i=0; i<milestones.length; i++){
+        if(milestones[i].id == id){
+            return(milestones[i].id, milestones[i].milestone_type, milestones[i].description, milestones[i].comments, milestones[i].recipient, milestones[i].value, milestones[i].time);
+        }
+      }
+   }
 
   function getSummary() public view returns (
     uint, uint, uint, address

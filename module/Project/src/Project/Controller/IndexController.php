@@ -174,7 +174,7 @@ class IndexController extends AbstractActionController
                     $value = 0;
                     $time = time();
 
-                    $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+                    $contract->at($contractAddress)->send('setMilestone', 'general', $description, $comments, $recipient, $value, $time, [
                       'from' => $fromAccount,
                       'gas' => '0x200b20'
                     ], function($error, $result) use ($contract, $contractAddress, $fromAccount, &$milestonesCount){
@@ -263,6 +263,7 @@ class IndexController extends AbstractActionController
 
   public function viewAction()
   {
+
     $contract_address = $this->params('id');
     if (!$contract_address) {
       return $this->redirect()->toRoute('home');
@@ -363,6 +364,7 @@ class IndexController extends AbstractActionController
 
             $contract->at($project->getContractAddress())->send('contribute', [
               'gas' => '0x200b20',
+              'gasPrice' => '0x200b20',
               'from' => $fromAccount,
               'to' => $toAccount,
               'value' => $weiHex
@@ -397,7 +399,7 @@ class IndexController extends AbstractActionController
               $time = time();
               $contractAddress = $project->getContractAddress();
 
-              $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+              $contract->at($contractAddress)->send('setMilestone', 'general', $description, $comments, $recipient, $value, $time, [
                 'from' => $fromAccount,
                 'gas' => '0x200b20'
               ], function($error, $result) use ($project){
@@ -425,13 +427,13 @@ class IndexController extends AbstractActionController
 
               $value = $amount;
               $description1 = "Payment for " . $supplier->getName() . ". Amount paid ETH " . $value;
-              $description = $description1 . $description;
+              $description = $description1 . "." . $description;
 
               $recipient = $fromAccount;
               $time = time();
               $contractAddress = $project->getContractAddress();
 
-              $contract->at($contractAddress)->send('setMilestone', $description, $comments, $recipient, $value, $time, [
+              $contract->at($contractAddress)->send('setMilestone', 'purchase_order', $description, $comments, $recipient, $value, $time, [
                 'from' => $fromAccount,
                 'gas' => '0x200b20'
               ], function($error, $result) use ($project){
@@ -482,11 +484,12 @@ class IndexController extends AbstractActionController
           }
 
           $milestones[] = array(
-            'description' => $result[1],
-            'comments' => $result[2],
-            'recipient' => $result[3],
-            'value' => $result[4],
-            'time' => $result[5]->value,
+            'milestone_type' => $result[1],
+            'description' => $result[2],
+            'comments' => $result[3],
+            'recipient' => $result[4],
+            'value' => $result[5],
+            'time' => $result[6]->value,
           );
         });
       }
