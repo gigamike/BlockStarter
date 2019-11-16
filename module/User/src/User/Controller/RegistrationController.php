@@ -36,9 +36,6 @@ class RegistrationController extends AbstractActionController
 
     public function indexAction()
     {
-
-
-
       $config = $this->getServiceLocator()->get('Config');
 
       $form = $this->getServiceLocator()->get('RegistrationForm');

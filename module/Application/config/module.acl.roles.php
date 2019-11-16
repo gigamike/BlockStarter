@@ -15,6 +15,7 @@ return array(
 		'chatbot',
 		'suppliers',
 		'contact',
+		'accounts',
 	),
 	'supplier'=> array(
 		'supplier',
